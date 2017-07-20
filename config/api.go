@@ -1,17 +1,18 @@
 package config
 
+import (
+	binder "github.com/Financial-Times/email-platform-tools/config"
+)
+
 type Config struct {
-	Connection ConnectionConfig `json:"connection"`
+	GOENV      string `json:"goenv"`
+	RabbitHost string `json:"rabbithost"`
 }
 
-type ConnectionConfig struct {
-	Host string `json:"host"`
-}
-
-func connectionConfigToAddress(c ConnectionConfig) (RabbitAddress, error) {
-	add := RabbitAddress{
-		Host: c.host,
+func NewConfig(path string) (Config, error) {
+	var cfg Config
+	if err := binder.Bind(path, &cfg); err != nil {
+		return Config{}, err
 	}
-	log.Printf("RabbitMQ Ready to Dial")
-	return add, nil
+	return cfg, nil
 }
