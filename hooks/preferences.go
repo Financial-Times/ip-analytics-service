@@ -33,4 +33,5 @@ func preferencesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	successHandler(w, r)
 }
