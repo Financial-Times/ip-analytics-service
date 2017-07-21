@@ -6,7 +6,7 @@ import (
 
 // Handler handles webhook events from a particular service
 type Handler interface {
-	HandlePOST
+	HandlePOST(w http.ResponseWriter, r *http.Request)
 }
 
 // RegisterHandlers registers all paths and handlers to provided mux

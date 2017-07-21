@@ -18,7 +18,8 @@ var responseTests = []struct {
 
 func TestPreferencesHandlerResponse(t *testing.T) {
 	var rr *httptest.ResponseRecorder
-	handler := http.HandlerFunc(preferencesHandler)
+	h := &PreferenceHandler{}
+	handler := http.HandlerFunc(h.HandlePOST)
 	for _, tt := range responseTests {
 		rr = httptest.NewRecorder()
 		b := bytes.NewReader([]byte(tt.input))
