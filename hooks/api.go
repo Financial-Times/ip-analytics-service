@@ -4,15 +4,18 @@ import (
 	"net/http"
 )
 
-type handlerFn func(http.ResponseWriter, *http.Request)
+// Handler handles webhook events from a particular service
+type Handler interface {
+	HandlePOST
+}
 
 // RegisterHandlers registers all paths and handlers to provided mux
 func RegisterHandlers(mux *http.ServeMux) {
-	paths := map[string]handlerFn{
-		"/hello": preferencesHandler,
+	paths := map[string]Handler{
+		"/hello": &PreferenceHandler{},
 	}
 	for p, h := range paths {
-		mux.HandleFunc(p, h)
+		mux.Handle(p, http.HandlerFunc(h.HandlePOST))
 	}
 }
 
