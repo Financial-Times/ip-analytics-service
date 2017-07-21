@@ -16,7 +16,7 @@ var responseTests = []struct {
 	{`{"test":"test"}`, http.StatusBadRequest}, // missing UUID
 }
 
-func TestPreferencesHandler(t *testing.T) {
+func TestPreferencesHandlerResponse(t *testing.T) {
 	var rr *httptest.ResponseRecorder
 	handler := http.HandlerFunc(preferencesHandler)
 	for _, tt := range responseTests {
@@ -34,4 +34,8 @@ func TestPreferencesHandler(t *testing.T) {
 				status, tt.input, tt.expected)
 		}
 	}
+}
+
+func TestPreferencesHandlerPublish(t *testing.T) {
+
 }
