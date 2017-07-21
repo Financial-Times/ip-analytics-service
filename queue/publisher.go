@@ -5,9 +5,9 @@ import (
 	"log"
 	"time"
 
-	"github.com/financial-times/ip-analytics-service/config"
+	"github.com/financial-times/ip-events-service/config"
 	"github.com/satori/go.uuid"
-	"guthub.com/streadway/amqp"
+	"github.com/streadway/amqp"
 )
 
 type Publisher struct {
