@@ -9,5 +9,5 @@ import (
 func main() {
 	mux := http.NewServeMux()
 	hooks.RegisterHandlers(mux)
-	http.ListentAndServe(":8000", mux)
+	http.ListenAndServe(":8000", mux)
 }

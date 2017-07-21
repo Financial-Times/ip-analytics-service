@@ -1,7 +1,6 @@
 package queue
 
 import (
-	"github.com/financial-times/ip-events-service/config"
 	"github.com/streadway/amqp"
 )
 

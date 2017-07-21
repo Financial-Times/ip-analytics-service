@@ -13,10 +13,10 @@ import (
 type Publisher struct {
 }
 
-func (p *Publisher) Publish(body string, contentType string, ch *amqp.Channel, cfg config.EnricherConfig) error {
-	queueName, ok := cfg.QueueConfig["queuename"].(string)
-	if !ok {
-		return fmt.Errorf("unable to parse queuename from config")
+func (p *Publisher) Publish(body string, contentType string, ch *amqp.Channel, cfg config.Config) error {
+	queueName := cfg.RabbitHost
+	if queueName == "" {
+		return fmt.Errorf("RabbitHost is empty")
 	}
 
 	q, err := ch.QueueDeclare(

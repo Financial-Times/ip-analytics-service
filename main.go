@@ -4,8 +4,8 @@ import (
 	"flag"
 	"log"
 
-	"github.com/financial-times/ip-analytics-service/config"
-	"github.com/financial-times/ip-analytics-service/queue"
+	"github.com/financial-times/ip-events-service/config"
+	"github.com/financial-times/ip-events-service/queue"
 )
 
 var configPath = flag.String("config", "config_dev.yaml", "path to yaml config")
@@ -19,9 +19,11 @@ func main() {
 		panic(err)
 	}
 
-	conn, connErr, err := queue.DialRabbit()
+	conn, connErr, err := queue.DialRabbit(c.RabbitHost)
 	if err != nil {
 		log.Println(err)
 		panic(err)
 	}
+
+	log.Println(conn, connErr)
 }
