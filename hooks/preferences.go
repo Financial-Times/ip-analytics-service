@@ -34,6 +34,8 @@ func (ph *PreferenceHandler) HandlePOST(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	//fb := formatEvent(b)
+	//ph.Publisher.Publish(
 	successHandler(w, r)
 }
 
@@ -53,15 +55,14 @@ func parseBody(body io.Reader) (*Preference, error) {
 // Preference defines the possible changes to user preferences - keyed by UUID
 type Preference struct {
 	UUID                     string `json:"uuid"`
-	SuppressedMarketing      string `json:"suppressedMarketing"`
-	SuppressedNewsletter     string `json:"suppressedNewsletter"`
-	SuppressedRecommendation string `json:"suppressedRecommendation"`
-	SuppressedAccount        string `json:"suppressedAccount"`
-	SubscriptionChange       List   `json:"list"`
+	SuppressedMarketing      bool   `json:"suppressedMarketing"`
+	SuppressedNewsletter     bool   `json:"suppressedNewsletter"`
+	SuppressedRecommendation bool   `json:"suppressedRecommendation"`
+	SuppressedAccount        bool   `json:"suppressedAccount"`
+	Lists                    []List `json:"lists"`
 }
 
 // List contains an ID of an email list and the action (ADD/DEL)
 type List struct {
-	ListID string
-	Action string
+	ListID string `json:"listId"`
 }

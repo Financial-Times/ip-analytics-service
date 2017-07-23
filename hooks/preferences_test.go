@@ -2,6 +2,7 @@ package hooks
 
 import (
 	"bytes"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -37,6 +38,47 @@ func TestPreferencesHandlerResponse(t *testing.T) {
 	}
 }
 
-func TestPreferencesHandlerPublish(t *testing.T) {
+func TestParseBodyWithUUID(t *testing.T) {
+	b := map[string]interface{}{"UUID": "1234fjf", "suppressedMarketing": true}
+	bStr, err := json.Marshal(b)
+	if err != nil {
+		t.Errorf("JSON Marshal failed with error %v", err.Error())
+	}
+	pb, err := parseBody(bytes.NewReader(bStr))
+	if err != nil {
+		t.Errorf("parseBody returned error %v", err.Error())
+	}
+	if pb.UUID != b["UUID"] {
+		t.Errorf("UUID failed to parse")
+	}
+}
 
+func TestParseBody(t *testing.T) {
+	b := &Preference{UUID: "1234fjf", SuppressedMarketing: true}
+	bStr, err := json.Marshal(b)
+	if err != nil {
+		t.Errorf("JSON Marshal failed with error %v", err.Error())
+	}
+	pb, err := parseBody(bytes.NewReader(bStr))
+	if err != nil {
+		t.Errorf("parseBody returned error %v", err.Error())
+	}
+	if pb.UUID != b.UUID {
+		t.Errorf("UUID failed to parse")
+	}
+}
+
+func TestParseBodyWithList(t *testing.T) {
+	b := &Preference{UUID: "1234fjf", SuppressedNewsletter: true, Lists: []List{List{"1234"}}}
+	bStr, err := json.Marshal(b)
+	if err != nil {
+		t.Errorf("JSON Marshal failed with error %v", err.Error())
+	}
+	pb, err := parseBody(bytes.NewReader(bStr))
+	if err != nil {
+		t.Errorf("parseBody returned error %v", err.Error())
+	}
+	if pb.Lists[0] != b.Lists[0] {
+		t.Errorf("Lists failed to parse")
+	}
 }
