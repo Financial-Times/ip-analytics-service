@@ -1,9 +1,5 @@
 {
 	"comment": "",
-  "heroku": {
-    "install": ["./cmd/..."],
-    "goVersion": "go1.8.3"
-  },
 	"ignore": "test",
 	"package": [
 		{
@@ -15,32 +11,32 @@
 		{
 			"checksumSHA1": "k+UmV7Jn9S5VS5zljiUOTc18Xm0=",
 			"path": "github.com/financial-times/ip-events-service",
-			"revision": "d5b2c33c507e1183a12c6f3dee838a71247d1d23",
-			"revisionTime": "2017-07-25T11:56:27Z"
+			"revision": "4a2f7b273787809ff25e7bcccf865412c14e78d1",
+			"revisionTime": "2017-07-25T12:22:40Z"
 		},
 		{
 			"checksumSHA1": "JRGywIDMQAZPvrVbqPYhPobn4xc=",
 			"path": "github.com/financial-times/ip-events-service/cmd/hook_server",
-			"revision": "d5b2c33c507e1183a12c6f3dee838a71247d1d23",
-			"revisionTime": "2017-07-25T11:56:27Z"
+			"revision": "4a2f7b273787809ff25e7bcccf865412c14e78d1",
+			"revisionTime": "2017-07-25T12:22:40Z"
 		},
 		{
 			"checksumSHA1": "dX95GACdE//2ScXnpnHydmes2Wc=",
 			"path": "github.com/financial-times/ip-events-service/config",
-			"revision": "d5b2c33c507e1183a12c6f3dee838a71247d1d23",
-			"revisionTime": "2017-07-25T11:56:27Z"
+			"revision": "4a2f7b273787809ff25e7bcccf865412c14e78d1",
+			"revisionTime": "2017-07-25T12:22:40Z"
 		},
 		{
 			"checksumSHA1": "RPyxy5yf7MyfRocvbDrpmnLhetE=",
 			"path": "github.com/financial-times/ip-events-service/hooks",
-			"revision": "d5b2c33c507e1183a12c6f3dee838a71247d1d23",
-			"revisionTime": "2017-07-25T11:56:27Z"
+			"revision": "4a2f7b273787809ff25e7bcccf865412c14e78d1",
+			"revisionTime": "2017-07-25T12:22:40Z"
 		},
 		{
 			"checksumSHA1": "ciYv6DbjSllQKfBIzm+LZgkfQKo=",
 			"path": "github.com/financial-times/ip-events-service/queue",
-			"revision": "d5b2c33c507e1183a12c6f3dee838a71247d1d23",
-			"revisionTime": "2017-07-25T11:56:27Z"
+			"revision": "4a2f7b273787809ff25e7bcccf865412c14e78d1",
+			"revisionTime": "2017-07-25T12:22:40Z"
 		},
 		{
 			"checksumSHA1": "zmC8/3V4ls53DJlNTKDZwPSC/dA=",

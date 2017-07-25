@@ -12,3 +12,6 @@ go get ./...
 go get -u github.com/kardianos/govendor
 govendor init
 govendor fetch ./...
+
+# Add heroku details for vendor.json
+cat ./vendor/vendor.json | jq --argjson heroku '{"install": ["./cmd/..."], "goVersion": "go1.8.3"}' '. + {heroku: $heroku}'
