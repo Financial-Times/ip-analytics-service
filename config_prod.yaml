@@ -1,2 +1,3 @@
 rabbithost: ${CLOUDAMQP_URL}
 apikey: ${API_KEY}
+port: ${PORT}

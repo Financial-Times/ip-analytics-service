@@ -20,6 +20,6 @@ func main() {
 	}
 	mux := http.NewServeMux()
 	hooks.RegisterHandlers(mux, c)
-	log.Println("Server listening on 8000")
-	http.ListenAndServe(":8000", mux)
+	log.Printf("Server listening on %v", c.Port)
+	http.ListenAndServe(":"+c.Port, mux)
 }

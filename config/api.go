@@ -9,6 +9,7 @@ type Config struct {
 	GOENV      string `json:"goenv"`
 	APIKey     string `json:"apikey"`
 	RabbitHost string `json:"rabbithost"`
+	Port       string `json:"port"`
 }
 
 // NewConfig returns a new Config instance bound with yaml file
