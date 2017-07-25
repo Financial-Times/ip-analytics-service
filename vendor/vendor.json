@@ -1,0 +1,61 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "2/5Usq6ZHHRIj0ZeJ3XzdS9qcCQ=",
+			"path": "github.com/Financial-Times/email-platform-tools/config",
+			"revision": "f0623d710bec8c1e161b8bb8e2e315f7905a8024",
+			"revisionTime": "2017-06-28T09:12:09Z"
+		},
+		{
+			"checksumSHA1": "hEqZRXay6WUGiVA8DUbsuZ/VSEU=",
+			"path": "github.com/financial-times/ip-events-service",
+			"revision": "2ecf0f40e0b344ba50dbab8e77afe93f38378feb",
+			"revisionTime": "2017-07-25T11:39:22Z"
+		},
+		{
+			"checksumSHA1": "PLNDGIbTiWeWwVck6++Odk7mhYI=",
+			"path": "github.com/financial-times/ip-events-service/cmd/hook_server",
+			"revision": "2ecf0f40e0b344ba50dbab8e77afe93f38378feb",
+			"revisionTime": "2017-07-25T11:39:22Z"
+		},
+		{
+			"checksumSHA1": "6YYn43gkzP17B+Ryn/lauhgYr7E=",
+			"path": "github.com/financial-times/ip-events-service/config",
+			"revision": "2ecf0f40e0b344ba50dbab8e77afe93f38378feb",
+			"revisionTime": "2017-07-25T11:39:22Z"
+		},
+		{
+			"checksumSHA1": "RPyxy5yf7MyfRocvbDrpmnLhetE=",
+			"path": "github.com/financial-times/ip-events-service/hooks",
+			"revision": "2ecf0f40e0b344ba50dbab8e77afe93f38378feb",
+			"revisionTime": "2017-07-25T11:39:22Z"
+		},
+		{
+			"checksumSHA1": "ciYv6DbjSllQKfBIzm+LZgkfQKo=",
+			"path": "github.com/financial-times/ip-events-service/queue",
+			"revision": "2ecf0f40e0b344ba50dbab8e77afe93f38378feb",
+			"revisionTime": "2017-07-25T11:39:22Z"
+		},
+		{
+			"checksumSHA1": "zmC8/3V4ls53DJlNTKDZwPSC/dA=",
+			"path": "github.com/satori/go.uuid",
+			"revision": "5bf94b69c6b68ee1b541973bb8e1144db23a194b",
+			"revisionTime": "2017-03-21T23:07:31Z"
+		},
+		{
+			"checksumSHA1": "3XsmaR3i5euGHpt150DerScyOco=",
+			"path": "github.com/streadway/amqp",
+			"revision": "2cbfe40c9341ad63ba23e53013b3ddc7989d801c",
+			"revisionTime": "2017-07-07T20:29:55Z"
+		},
+		{
+			"checksumSHA1": "o20lmjzBQyKD5LfLZ3OhUoMkLds=",
+			"path": "gopkg.in/yaml.v2",
+			"revision": "25c4ec802a7d637f88d584ab26798e94ad14c13b",
+			"revisionTime": "2017-07-21T12:20:51Z"
+		}
+	],
+	"rootPath": "github.com/financial-times/ip-events-service"
+}

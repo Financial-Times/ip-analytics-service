@@ -6,6 +6,7 @@ source ./bin/lib/strict_mode.sh
 
 # clean dependencies
 rm -rf vendor
+go clean ./...
 
 go get ./...
 go get -u github.com/kardianos/govendor
