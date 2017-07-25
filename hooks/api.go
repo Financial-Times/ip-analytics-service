@@ -12,8 +12,9 @@ type Handler interface {
 
 // RegisterHandlers registers all paths and handlers to provided mux
 func RegisterHandlers(mux *http.ServeMux, cfg config.Config) {
+	prefix := "/webhooks"
 	paths := map[string]Handler{
-		"/membership": &MembershipHandler{},
+		prefix + "/membership": &MembershipHandler{},
 	}
 	for p, h := range paths {
 		mux.Handle(p, authMiddleware(http.HandlerFunc(h.HandlePOST), cfg.APIKey))

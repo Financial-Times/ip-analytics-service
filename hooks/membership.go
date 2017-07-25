@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 
 	"github.com/financial-times/ip-events-service/config"
@@ -28,12 +27,11 @@ func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	b, err := parseBody(r.Body)
+	_, err := parseBody(r.Body)
 	if err != nil {
 		errorHandler(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	log.Println(b)
 
 	//m.Publisher.Publish(
 	successHandler(w, r)
