@@ -1,5 +1,9 @@
 {
 	"comment": "",
+  "heroku": {
+    "install": ["./cmd/..."],
+    "goVersion": "go1.8.3"
+  },
 	"ignore": "test",
 	"package": [
 		{
@@ -9,34 +13,34 @@
 			"revisionTime": "2017-06-28T09:12:09Z"
 		},
 		{
-			"checksumSHA1": "hEqZRXay6WUGiVA8DUbsuZ/VSEU=",
+			"checksumSHA1": "k+UmV7Jn9S5VS5zljiUOTc18Xm0=",
 			"path": "github.com/financial-times/ip-events-service",
-			"revision": "2ecf0f40e0b344ba50dbab8e77afe93f38378feb",
-			"revisionTime": "2017-07-25T11:39:22Z"
+			"revision": "d5b2c33c507e1183a12c6f3dee838a71247d1d23",
+			"revisionTime": "2017-07-25T11:56:27Z"
 		},
 		{
-			"checksumSHA1": "PLNDGIbTiWeWwVck6++Odk7mhYI=",
+			"checksumSHA1": "JRGywIDMQAZPvrVbqPYhPobn4xc=",
 			"path": "github.com/financial-times/ip-events-service/cmd/hook_server",
-			"revision": "2ecf0f40e0b344ba50dbab8e77afe93f38378feb",
-			"revisionTime": "2017-07-25T11:39:22Z"
+			"revision": "d5b2c33c507e1183a12c6f3dee838a71247d1d23",
+			"revisionTime": "2017-07-25T11:56:27Z"
 		},
 		{
-			"checksumSHA1": "6YYn43gkzP17B+Ryn/lauhgYr7E=",
+			"checksumSHA1": "dX95GACdE//2ScXnpnHydmes2Wc=",
 			"path": "github.com/financial-times/ip-events-service/config",
-			"revision": "2ecf0f40e0b344ba50dbab8e77afe93f38378feb",
-			"revisionTime": "2017-07-25T11:39:22Z"
+			"revision": "d5b2c33c507e1183a12c6f3dee838a71247d1d23",
+			"revisionTime": "2017-07-25T11:56:27Z"
 		},
 		{
 			"checksumSHA1": "RPyxy5yf7MyfRocvbDrpmnLhetE=",
 			"path": "github.com/financial-times/ip-events-service/hooks",
-			"revision": "2ecf0f40e0b344ba50dbab8e77afe93f38378feb",
-			"revisionTime": "2017-07-25T11:39:22Z"
+			"revision": "d5b2c33c507e1183a12c6f3dee838a71247d1d23",
+			"revisionTime": "2017-07-25T11:56:27Z"
 		},
 		{
 			"checksumSHA1": "ciYv6DbjSllQKfBIzm+LZgkfQKo=",
 			"path": "github.com/financial-times/ip-events-service/queue",
-			"revision": "2ecf0f40e0b344ba50dbab8e77afe93f38378feb",
-			"revisionTime": "2017-07-25T11:39:22Z"
+			"revision": "d5b2c33c507e1183a12c6f3dee838a71247d1d23",
+			"revisionTime": "2017-07-25T11:56:27Z"
 		},
 		{
 			"checksumSHA1": "zmC8/3V4ls53DJlNTKDZwPSC/dA=",
