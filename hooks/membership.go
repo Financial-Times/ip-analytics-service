@@ -66,6 +66,7 @@ type membershipEvent struct {
 //UUID string `json:"ft_guid"`
 //}
 
+// context should include a message type i.e. SubscriptionCancelRequestProcessed
 //type context struct {
 //}
 
@@ -74,7 +75,23 @@ type membershipEvent struct {
 //Version string `json:"version"`
 //}
 
-// Membership defines the possible changes to user memberships - keyed by UUID
-type Membership struct {
-	UUID string `json:"uuid"`
+type subscriptionChange struct {
+	Subscription subscription `json:"subscription"`
+}
+
+type subscription struct {
+	UUID            string `json:"userId"`
+	PaymentMethodID string `json:"paymentType,omitempty"`
+	OfferID         string `json:"offerId,omitempty"`
+	Product         struct {
+		ID   string `json:"id"`
+		Name string `json:"name"`
+	} `json:"product,omitempty"`
+	SegmentID          string `json:"segmentId,omitempty"`
+	ProductRatePlanID  string
+	SubscriptionID     string
+	SubscriptionNumber string
+	InvoiceID          string
+	InvoiceNumber      string
+	CancellationReason string `json:"cancellationReason,omitempty"`
 }
