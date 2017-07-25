@@ -1,6 +1,7 @@
 package hooks
 
 import (
+	"github.com/financial-times/ip-events-service/config"
 	"net/http"
 )
 
@@ -10,12 +11,22 @@ type Handler interface {
 }
 
 // RegisterHandlers registers all paths and handlers to provided mux
-func RegisterHandlers(mux *http.ServeMux) {
+func RegisterHandlers(mux *http.ServeMux, cfg config.Config) {
 	paths := map[string]Handler{
-		"/hello": &PreferenceHandler{},
+		"/membership": &MembershipHandler{},
 	}
 	for p, h := range paths {
-		mux.Handle(p, http.HandlerFunc(h.HandlePOST))
+		mux.Handle(p, authMiddleware(http.HandlerFunc(h.HandlePOST), cfg.APIKey))
+	}
+}
+
+func authMiddleware(f http.HandlerFunc, key string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Header.Get("X-API-KEY") != key {
+			errorHandler(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+		f(w, r)
 	}
 }
 

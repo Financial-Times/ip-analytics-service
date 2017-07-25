@@ -82,3 +82,6 @@ func TestParseBodyWithList(t *testing.T) {
 		t.Errorf("Lists failed to parse")
 	}
 }
+
+func TestFormatEvent(t *testing.T) {
+}
