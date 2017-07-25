@@ -12,19 +12,18 @@ var responseTests = []struct {
 	input    string
 	expected int
 }{
-	{`{"uuid":"test"}`, http.StatusOK},         // valid input
-	{`{uuid: test}`, http.StatusBadRequest},    // invalid JSON
-	{`{"test":"test"}`, http.StatusBadRequest}, // missing UUID
+	{`{"uuid":"test"}`, http.StatusOK},       // valid input
+	{`{uuid: test}}`, http.StatusBadRequest}, // invalid JSON
 }
 
-func TestPreferencesHandlerResponse(t *testing.T) {
+func TestMembershipHandlerResponse(t *testing.T) {
 	var rr *httptest.ResponseRecorder
-	h := &PreferenceHandler{}
+	h := &MembershipHandler{}
 	handler := http.HandlerFunc(h.HandlePOST)
 	for _, tt := range responseTests {
 		rr = httptest.NewRecorder()
 		b := bytes.NewReader([]byte(tt.input))
-		req, err := http.NewRequest("POST", "/preferences", b)
+		req, err := http.NewRequest("POST", "/membership", b)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -38,23 +37,9 @@ func TestPreferencesHandlerResponse(t *testing.T) {
 	}
 }
 
-func TestParseBodyWithUUID(t *testing.T) {
-	b := map[string]interface{}{"UUID": "1234fjf", "suppressedMarketing": true}
-	bStr, err := json.Marshal(b)
-	if err != nil {
-		t.Errorf("JSON Marshal failed with error %v", err.Error())
-	}
-	pb, err := parseBody(bytes.NewReader(bStr))
-	if err != nil {
-		t.Errorf("parseBody returned error %v", err.Error())
-	}
-	if pb.UUID != b["UUID"] {
-		t.Errorf("UUID failed to parse")
-	}
-}
-
 func TestParseBody(t *testing.T) {
-	b := &Preference{UUID: "1234fjf", SuppressedMarketing: true}
+	msg := json.RawMessage(`{"UUID": "123"}`)
+	b := &membershipEvents{[]membershipEvent{membershipEvent{Body: &msg}}}
 	bStr, err := json.Marshal(b)
 	if err != nil {
 		t.Errorf("JSON Marshal failed with error %v", err.Error())
@@ -63,23 +48,8 @@ func TestParseBody(t *testing.T) {
 	if err != nil {
 		t.Errorf("parseBody returned error %v", err.Error())
 	}
-	if pb.UUID != b.UUID {
-		t.Errorf("UUID failed to parse")
-	}
-}
-
-func TestParseBodyWithList(t *testing.T) {
-	b := &Preference{UUID: "1234fjf", SuppressedNewsletter: true, Lists: []List{List{"1234"}}}
-	bStr, err := json.Marshal(b)
-	if err != nil {
-		t.Errorf("JSON Marshal failed with error %v", err.Error())
-	}
-	pb, err := parseBody(bytes.NewReader(bStr))
-	if err != nil {
-		t.Errorf("parseBody returned error %v", err.Error())
-	}
-	if pb.Lists[0] != b.Lists[0] {
-		t.Errorf("Lists failed to parse")
+	if *pb.Messages[0].Body == nil {
+		t.Errorf("Expected parsed message to equal %v but got %v", b.Messages[0], pb.Messages[0])
 	}
 }
 
