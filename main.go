@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"log"
+	"os"
 
 	"github.com/financial-times/ip-events-service/config"
 	"github.com/financial-times/ip-events-service/queue"

@@ -1,8 +1,9 @@
 package hooks
 
 import (
-	"github.com/financial-times/ip-events-service/config"
 	"net/http"
+
+	"github.com/financial-times/ip-events-service/config"
 )
 
 // Handler handles webhook events from a particular service
