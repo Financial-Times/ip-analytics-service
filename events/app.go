@@ -52,7 +52,9 @@ func (e *App) Run() error {
 		return err
 	}
 
-	// main control flow
+	// Start consmuming and publishing
+
+	// connection control flow
 	for {
 		select {
 		case err, ok := <-e.connErr:

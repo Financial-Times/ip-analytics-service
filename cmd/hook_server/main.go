@@ -21,6 +21,8 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	// TODO make channel and pass to events app and server
+	// Run start as goroutine
 	ea := events.NewEventsApp(c.RabbitHost)
 	if err := ea.Run(); err != nil {
 		log.Printf("Something went wrong: %s", err)

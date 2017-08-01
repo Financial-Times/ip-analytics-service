@@ -12,17 +12,17 @@ import (
 
 // Publisher for producing on queue
 type Publisher struct {
-	Queue   amqp.Queue
-	Channel *amqp.Channel
+	QueueName string
+	Channel   *amqp.Channel
 }
 
 // Publish publishes messages to queue
 func (p *Publisher) Publish(body string, contentType string) error {
 	err := p.Channel.Publish(
-		"",           // exchange
-		p.Queue.Name, // routing key
-		false,        // mandatory
-		false,        // immediate
+		"",          // exchange
+		p.QueueName, // routing key
+		false,       // mandatory
+		false,       // immediate
 		amqp.Publishing{
 			ContentType: contentType,
 			Body:        []byte(body),
@@ -33,7 +33,7 @@ func (p *Publisher) Publish(body string, contentType string) error {
 	if err != nil {
 		return err
 	}
-	log.Printf(" [x] Sent to %s", p.Queue.Name)
+	log.Printf(" [x] Sent to %s", p.QueueName)
 	return nil
 }
 
@@ -49,7 +49,7 @@ func NewPublisher(ch *amqp.Channel, cfg *config.Config) (*Publisher, error) {
 	}
 
 	return &Publisher{
-		Channel: ch,
-		Queue:   q,
+		Channel:   ch,
+		QueueName: q.Name,
 	}, nil
 }

@@ -11,14 +11,8 @@ import (
 	"github.com/streadway/amqp"
 )
 
-// Publisher interface for rabbitmq publisher
-type Publisher interface {
-	Publish(body string, contentType string, ch *amqp.Channel, cfg *config.Config) error
-}
-
 // MembershipHandler for handling HTTP requests and publishing to queue
 type MembershipHandler struct {
-	Publisher
 }
 
 // HandlePOST publishes received body to queue in correct format
