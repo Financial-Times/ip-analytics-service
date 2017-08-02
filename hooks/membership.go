@@ -5,7 +5,6 @@ import (
 	"errors"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 
 	"github.com/financial-times/ip-events-service/queue"
@@ -41,7 +40,7 @@ func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *
 	m.Publish <- msg
 	<-confirm
 
-	//successHandler(w, r)
+	successHandler(w, r)
 	return nil
 }
 
@@ -135,19 +134,19 @@ type system struct {
 
 // Subscription has necessary information for changes
 type Subscription struct {
-	UUID            string `json:"userId,omitempty"`
+	UUID            string `json:"userId"`
 	PaymentMethodID string `json:"paymentType,omitempty"`
 	OfferID         string `json:"offerId,omitempty"`
 	Product         struct {
-		ID   string `json:"id"`
-		Name string `json:"name"`
+		ID   string `json:"id,omitempty"`
+		Name string `json:"name,omitempty"`
 	} `json:"product,omitempty"`
 	SegmentID          string `json:"segmentId,omitempty"`
-	ProductRatePlanID  string
-	SubscriptionID     string
-	SubscriptionNumber string
-	InvoiceID          string
-	InvoiceNumber      string
+	ProductRatePlanID  string `json:"productRatePlanId,omitempty"`
+	SubscriptionID     string `json:"subscriptionId,omitempty"`
+	SubscriptionNumber string `json:"subscriptionNumber,omitempty"`
+	InvoiceID          string `json:"invoiceId,omitempty"`
+	InvoiceNumber      string `json:"invoiceNumber,omitempty"`
 	CancellationReason string `json:"cancellationReason,omitempty"`
 	MessageType        string `json:"messageType"`
 }
