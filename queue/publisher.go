@@ -63,14 +63,16 @@ func Publish(sessions chan chan Session, msgs <-chan Message, routingKey string)
 				err := pub.Publish("", routingKey, false, false, amqp.Publishing{
 					Body: body.Body,
 				})
+
 				// Retry failed delivery on next session
 				if err != nil {
-					body.Response <- true
+					body.Response <- false
 					pending <- body
 					pub.Close()
 					break Publish
 				}
-				// TODO move to confirm
+
+				// Let response channel know all is ok
 				body.Response <- true
 
 			case body, running = <-reading:

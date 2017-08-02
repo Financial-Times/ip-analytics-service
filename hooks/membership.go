@@ -36,8 +36,7 @@ func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *
 		return &AppError{err, "Bad Request", http.StatusBadRequest}
 	}
 
-	// Create a confirm channel to wait for confirmation from publisher
-	confirm := make(chan bool, 1)
+	confirm := make(chan bool, 1) // Create a confirm channel to wait for confirmation from publisher
 	msg := queue.Message{body, confirm}
 	m.Publish <- msg
 
