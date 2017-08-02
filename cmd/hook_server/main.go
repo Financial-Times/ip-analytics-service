@@ -1,15 +1,14 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/financial-times/ip-events-service/config"
-	"github.com/financial-times/ip-events-service/events"
 	"github.com/financial-times/ip-events-service/hooks"
-	//"github.com/financial-times/ip-events-service/queue"
+	"github.com/financial-times/ip-events-service/queue"
 )
 
 var configPath = flag.String("config", "config_dev.yaml", "path to yaml config")
@@ -21,16 +20,18 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	// TODO make channel and pass to events app and server
-	// Run start as goroutine
-	ea := events.NewEventsApp(c.RabbitHost)
-	if err := ea.Run(); err != nil {
-		log.Printf("Something went wrong: %s", err)
-		os.Exit(1)
-	}
+	msgChan := make(chan queue.Message)
+	ctx, done := context.WithCancel(context.Background())
+
+	go func() {
+		queue.Publish(queue.Redial(ctx, c.RabbitHost), msgChan, "test")
+		done()
+	}()
 
 	mux := http.NewServeMux()
-	hooks.RegisterHandlers(mux, c)
+	hooks.RegisterHandlers(mux, c, msgChan)
 	log.Printf("Server listening on %v", c.Port)
 	http.ListenAndServe(":"+c.Port, mux)
+
+	<-ctx.Done()
 }

@@ -1,55 +1,86 @@
 package queue
 
 import (
-	"fmt"
 	"log"
-	"time"
 
-	"github.com/financial-times/ip-events-service/config"
-	"github.com/satori/go.uuid"
 	"github.com/streadway/amqp"
 )
 
-// Publisher for producing on queue
-type Publisher struct {
-	QueueName string
-	Channel   *amqp.Channel
+// Message type for rabbitmq
+type Message struct {
+	Body     []byte
+	Response chan bool
 }
 
-// Publish publishes messages to queue
-func (p *Publisher) Publish(body string, contentType string) error {
-	err := p.Channel.Publish(
-		"",          // exchange
-		p.QueueName, // routing key
-		false,       // mandatory
-		false,       // immediate
-		amqp.Publishing{
-			ContentType: contentType,
-			Body:        []byte(body),
-			MessageId:   uuid.NewV4().String(),
-			Timestamp:   time.Now(),
-		})
+// Publish publishes message to a queue
+func Publish(sessions chan chan Session, msgs <-chan Message, routingKey string) {
+	for session := range sessions {
+		var (
+			running bool
+			reading = msgs
+			pending = make(chan Message, 1)
+			confirm = make(chan amqp.Confirmation, 1)
+		)
 
-	if err != nil {
-		return err
-	}
-	log.Printf(" [x] Sent to %s", p.QueueName)
-	return nil
-}
+		pub := <-session
 
-// NewPublisher returns a new Publisher bound to a ch/queue
-func NewPublisher(ch *amqp.Channel, cfg *config.Config) (*Publisher, error) {
-	queueName := cfg.RabbitHost
-	if queueName == "" {
-		return nil, fmt.Errorf("RabbitHost is empty")
-	}
-	q, err := Declare(queueName, ch)
-	if err != nil {
-		return nil, err
-	}
+		_, err := pub.Channel.QueueDeclare(
+			routingKey,
+			true,  // durable
+			false, // delete when unused
+			false, // exclusive
+			false, // no-wait
+			nil,   // arguments
+		)
 
-	return &Publisher{
-		Channel:   ch,
-		QueueName: q.Name,
-	}, nil
+		if err != nil {
+			log.Printf("could not declare queue %v", err)
+			return
+		}
+
+		// publisher confirms for this channel/connection
+		if err := pub.Confirm(false); err != nil {
+			log.Printf("publisher confirms not supported")
+			close(confirm) // confirms not supported, simulate by always nacking
+		} else {
+			pub.NotifyPublish(confirm)
+		}
+
+	Publish:
+		for {
+			var body Message
+			select {
+			case confirmed, ok := <-confirm:
+				if !ok {
+					break Publish
+				}
+				if confirmed.Ack {
+					log.Printf("nack message %d, body: %q", confirmed.DeliveryTag, string(body.Body))
+				}
+				reading = msgs
+
+			case body = <-pending:
+				err := pub.Publish("", routingKey, false, false, amqp.Publishing{
+					Body: body.Body,
+				})
+				// Retry failed delivery on next session
+				if err != nil {
+					pending <- body
+					pub.Close()
+					break Publish
+				}
+				// TODO move to confirm
+				body.Response <- true
+
+			case body, running = <-reading:
+				// all messages consumed
+				if !running {
+					return
+				}
+				// work on pending delivery until ack'd
+				pending <- body
+				reading = nil
+			}
+		}
+	}
 }

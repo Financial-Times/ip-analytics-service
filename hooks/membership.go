@@ -5,36 +5,46 @@ import (
 	"errors"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 
-	"github.com/financial-times/ip-events-service/config"
-	"github.com/streadway/amqp"
+	"github.com/financial-times/ip-events-service/queue"
 )
 
 // MembershipHandler for handling HTTP requests and publishing to queue
 type MembershipHandler struct {
+	Publish chan queue.Message
 }
 
 // HandlePOST publishes received body to queue in correct format
 func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
-		errorHandler(w, "Not Found", http.StatusNotFound)
+		errorHandler(w, reqError{errors.New("Not Found", "Not Found", http.StatusNotFound)})
 		return
 	}
 
 	e, err := parseEvents(r.Body)
 	if err != nil {
-		errorHandler(w, err.Error(), http.StatusBadRequest)
+		errorHandler(w, err)
 		return
 	}
 
-	_, err = formatEvents(e.Messages)
+	fe, err := formatEvents(e.Messages)
+	if err != nil {
+		errorHandler(w, err)
+		return
+	}
+
+	body, err := json.Marshal(fe)
 	if err != nil {
 		errorHandler(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	confirm := make(chan bool, 1)
+	msg := queue.Message{body, confirm}
+	m.Publish <- msg
+	<-confirm
 
-	//m.Publisher.Publish(, "application/json",
 	successHandler(w, r)
 }
 
@@ -64,30 +74,20 @@ func parseEvents(body io.Reader) (*membershipEvents, error) {
 	return p, nil
 }
 
-// FormattedEvent published to queue for consumption
-type FormattedEvent struct {
-	User    user          `json:"user"`
-	Context *Subscription `json:"context"`
-	System  system        `json:"system"`
-}
-
-type user struct {
-	UUID string `json:"ft_guid"`
-}
-
-type system struct {
-	Source string `json:"source"`
-}
-
-func formatEvents(me []membershipEvent) ([]formattedEvent, error) {
-	e := make([]formattedEvent, 0)
+func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
+	e := make([]FormattedEvent, 0)
 	s := system{"membership"}
 	for _, v := range me {
+		if v.Body == nil {
+			return nil, reqError{errors.New("Body required", "Bad Request - Body Required", 400)}
+		}
+
 		var err error
 		var ctx *Subscription
 		u := user{}
-		fe := formattedEvent{}
+		fe := FormattedEvent{}
 		switch t := v.MessageType; t {
+
 		case "SubscriptionPurchased", "SubscriptionCancelRequestProcessed":
 			ctx, err = parseSubscription([]byte(*v.Body))
 		default:
@@ -119,6 +119,21 @@ func parseSubscription(body []byte) (*Subscription, error) {
 
 type subscriptionChange struct {
 	Subscription Subscription `json:"subscription"`
+}
+
+// FormattedEvent published to queue for consumption
+type FormattedEvent struct {
+	User    user          `json:"user"`
+	Context *Subscription `json:"context"`
+	System  system        `json:"system"`
+}
+
+type user struct {
+	UUID string `json:"ft_guid"`
+}
+
+type system struct {
+	Source string `json:"source"`
 }
 
 // Subscription has necessary information for changes

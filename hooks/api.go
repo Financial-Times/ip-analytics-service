@@ -1,9 +1,11 @@
 package hooks
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/financial-times/ip-events-service/config"
+	"github.com/financial-times/ip-events-service/queue"
 )
 
 // Handler handles webhook events from a particular service
@@ -12,10 +14,10 @@ type Handler interface {
 }
 
 // RegisterHandlers registers all paths and handlers to provided mux
-func RegisterHandlers(mux *http.ServeMux, cfg config.Config) {
+func RegisterHandlers(mux *http.ServeMux, cfg config.Config, publish chan queue.Message) {
 	prefix := "/webhooks"
 	paths := map[string]Handler{
-		prefix + "/membership": &MembershipHandler{},
+		prefix + "/membership": &MembershipHandler{publish},
 	}
 	for p, h := range paths {
 		mux.Handle(p, authMiddleware(http.HandlerFunc(h.HandlePOST), cfg.APIKey))
@@ -37,6 +39,13 @@ func successHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("OK"))
 }
 
-func errorHandler(w http.ResponseWriter, msg string, status int) {
-	http.Error(w, msg, status)
+type reqError struct {
+	Error   error
+	Message string
+	Status  int
+}
+
+func errorHandler(w http.ResponseWriter, e reqError) {
+	log.Printf("%v", err)
+	http.Error(w, e.Message, e.Status)
 }
