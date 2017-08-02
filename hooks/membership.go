@@ -17,35 +17,32 @@ type MembershipHandler struct {
 }
 
 // HandlePOST publishes received body to queue in correct format
-func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
+func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *AppError {
 	if r.Method != "POST" {
-		errorHandler(w, reqError{errors.New("Not Found", "Not Found", http.StatusNotFound)})
-		return
+		return &AppError{errors.New("Not Found"), "Not Found", http.StatusNotFound}
 	}
 
 	e, err := parseEvents(r.Body)
 	if err != nil {
-		errorHandler(w, err)
-		return
+		return &AppError{err, "Bad Request", http.StatusBadRequest}
 	}
 
 	fe, err := formatEvents(e.Messages)
 	if err != nil {
-		errorHandler(w, err)
-		return
+		return &AppError{err, "Bad Request", http.StatusBadRequest}
 	}
 
 	body, err := json.Marshal(fe)
 	if err != nil {
-		errorHandler(w, err.Error(), http.StatusBadRequest)
-		return
+		return &AppError{err, "Bad Request", http.StatusBadRequest}
 	}
 	confirm := make(chan bool, 1)
 	msg := queue.Message{body, confirm}
 	m.Publish <- msg
 	<-confirm
 
-	successHandler(w, r)
+	//successHandler(w, r)
+	return nil
 }
 
 type membershipEvents struct {
@@ -79,7 +76,7 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 	s := system{"membership"}
 	for _, v := range me {
 		if v.Body == nil {
-			return nil, reqError{errors.New("Body required", "Bad Request - Body Required", 400)}
+			return nil, errors.New("Bad Request - Body Required")
 		}
 
 		var err error

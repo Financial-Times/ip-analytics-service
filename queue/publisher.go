@@ -54,7 +54,7 @@ func Publish(sessions chan chan Session, msgs <-chan Message, routingKey string)
 				if !ok {
 					break Publish
 				}
-				if confirmed.Ack {
+				if !confirmed.Ack {
 					log.Printf("nack message %d, body: %q", confirmed.DeliveryTag, string(body.Body))
 				}
 				reading = msgs
