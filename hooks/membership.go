@@ -35,10 +35,16 @@ func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *
 	if err != nil {
 		return &AppError{err, "Bad Request", http.StatusBadRequest}
 	}
+
+	// Create a confirm channel to wait for confirmation from publisher
 	confirm := make(chan bool, 1)
 	msg := queue.Message{body, confirm}
 	m.Publish <- msg
-	<-confirm
+
+	ok := <-confirm
+	if !ok {
+		return &AppError{errors.New("Internal Server Error"), "Internal Server Error", http.StatusInternalServerError}
+	}
 
 	successHandler(w, r)
 	return nil

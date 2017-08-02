@@ -24,7 +24,7 @@ func main() {
 	ctx, done := context.WithCancel(context.Background())
 
 	go func() {
-		queue.Publish(queue.Redial(ctx, c.RabbitHost), msgChan, "test")
+		queue.Publish(queue.Redial(ctx, c.RabbitHost), msgChan, c.QueueName)
 		done()
 	}()
 

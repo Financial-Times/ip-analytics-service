@@ -65,6 +65,7 @@ func Publish(sessions chan chan Session, msgs <-chan Message, routingKey string)
 				})
 				// Retry failed delivery on next session
 				if err != nil {
+					body.Response <- true
 					pending <- body
 					pub.Close()
 					break Publish
