@@ -13,7 +13,8 @@ type Message struct {
 }
 
 // Publish publishes message to a queue
-func Publish(sessions chan chan Session, msgs <-chan Message, routingKey string) {
+func Publish(sessions chan chan Session, msgs <-chan Message, queueName string) {
+
 	for session := range sessions {
 		var (
 			running bool
@@ -23,20 +24,6 @@ func Publish(sessions chan chan Session, msgs <-chan Message, routingKey string)
 		)
 
 		pub := <-session
-
-		_, err := pub.Channel.QueueDeclare(
-			routingKey,
-			true,  // durable
-			false, // delete when unused
-			false, // exclusive
-			false, // no-wait
-			nil,   // arguments
-		)
-
-		if err != nil {
-			log.Printf("could not declare queue %v", err)
-			return
-		}
 
 		// publisher confirms for this channel/connection
 		if err := pub.Confirm(false); err != nil {
@@ -60,7 +47,7 @@ func Publish(sessions chan chan Session, msgs <-chan Message, routingKey string)
 				reading = msgs
 
 			case body = <-pending:
-				err := pub.Publish("", routingKey, false, false, amqp.Publishing{
+				err := pub.Publish("", queueName, false, false, amqp.Publishing{
 					Body: body.Body,
 				})
 

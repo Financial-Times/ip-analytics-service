@@ -22,7 +22,7 @@ func (s Session) Close() error {
 }
 
 // Redial continually connects to host, exits when not possible
-func Redial(ctx context.Context, url string) chan chan Session {
+func Redial(ctx context.Context, url string, queueName string) chan chan Session {
 	sessions := make(chan chan Session)
 
 	go func() {
@@ -45,6 +45,11 @@ func Redial(ctx context.Context, url string) chan chan Session {
 			ch, err := conn.Channel()
 			if err != nil {
 				log.Fatalf("cannot create channel: %v", err)
+			}
+
+			_, err = Declare(queueName, ch)
+			if err != nil {
+				log.Fatalf("cannot declare queue: %v", err)
 			}
 
 			select {
