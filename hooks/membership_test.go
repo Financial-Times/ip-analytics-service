@@ -7,34 +7,60 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/financial-times/ip-events-service/config"
-	"github.com/streadway/amqp"
+	"github.com/financial-times/ip-events-service/queue"
 )
 
-type mockPublisher struct {
-	mockPublish func(body string, contentType string, ch *amqp.Channel, cfg *config.Config) error
-}
-
-func (mp *mockPublisher) Publish(body string, contentType string, ch *amqp.Channel, cfg *config.Config) error {
-	if mp.mockPublish != nil {
-		return mp.mockPublish("", "", nil, nil)
-	}
-	return nil
-}
-
-var responseTests = []struct {
+var validReqTests = []struct {
 	input    string
 	expected int
 }{
-	{`{"uuid":"test"}`, http.StatusOK},       // valid input
-	{`{uuid: test}}`, http.StatusBadRequest}, // invalid JSON
+	{`{"Messages": [{"MessageType": "SubscriptionPurchased", "Body": {"uuid": "test"}}]}`, http.StatusOK},
+	{`{"Messages": [{"MessageType": "SubscriptionCancelRequestProcessed", "Body": {"uuid": "test"}}]}`, http.StatusOK},
 }
 
-func TestMembershipHandlerResponse(t *testing.T) {
+var pubQueue chan queue.Message
+
+func TestMembershipHandlerOKResponse(t *testing.T) {
+	pubQueue = make(chan queue.Message, 1)
 	var rr *httptest.ResponseRecorder
-	h := &MembershipHandler{}
-	handler := http.HandlerFunc(h.HandlePOST)
-	for _, tt := range responseTests {
+	h := &MembershipHandler{pubQueue}
+	handler := appHandler(h.HandlePOST)
+	for _, tt := range validReqTests {
+		rr = httptest.NewRecorder()
+		b := bytes.NewReader([]byte(tt.input))
+		req, err := http.NewRequest("POST", "/membership", b)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		// Simulate positive response from publisher
+		go func() {
+			msg := <-pubQueue
+			msg.Response <- true
+		}()
+		handler.ServeHTTP(rr, req)
+
+		if status := rr.Code; status != tt.expected {
+			t.Errorf("Handler returned %v for input %v but expected %v",
+				status, tt.input, tt.expected)
+		}
+	}
+}
+
+var invalidReqTests = []struct {
+	input    string
+	expected int
+}{
+	{`In{valid{Json}`, http.StatusBadRequest},
+	{`{"subscription": [{"Body": {"uuid": "test"}}]}`, http.StatusBadRequest},
+	{`{"subscription": {"Messages": [{"MessageType": "Not Exist", "Body": {"uuid": "test"}}]}}`, http.StatusBadRequest},
+}
+
+func TestMembershipHandlerBadResponse(t *testing.T) {
+	var rr *httptest.ResponseRecorder
+	h := &MembershipHandler{pubQueue}
+	handler := appHandler(h.HandlePOST)
+	for _, tt := range invalidReqTests {
 		rr = httptest.NewRecorder()
 		b := bytes.NewReader([]byte(tt.input))
 		req, err := http.NewRequest("POST", "/membership", b)
@@ -52,27 +78,16 @@ func TestMembershipHandlerResponse(t *testing.T) {
 }
 
 func TestHandlePublishEvents(t *testing.T) {
-	called := false
+	pubQueue = make(chan queue.Message)
 	b := bytes.NewReader([]byte(`[{"subscription": {"MessageType": "test"}}]`))
 	rr := httptest.NewRecorder()
 	req, err := http.NewRequest("POST", "/membership", b)
 	if err != nil {
 		t.Errorf("Problem with http request %v", err)
 	}
-	h := &MembershipHandler{
-		&mockPublisher{
-			mockPublish: func(body string, contentType string, ch *amqp.Channel, cfg *config.Config) error {
-				called = true
-				return nil
-			},
-		},
-	}
-	handler := http.HandlerFunc(h.HandlePOST)
+	h := &MembershipHandler{pubQueue}
+	handler := appHandler(h.HandlePOST)
 	handler.ServeHTTP(rr, req)
-
-	if !called {
-		t.Error("Expected publisher to be called")
-	}
 }
 
 func TestParseEvents(t *testing.T) {

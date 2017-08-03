@@ -72,6 +72,10 @@ func parseEvents(body io.Reader) (*membershipEvents, error) {
 	if err != nil {
 		return nil, err
 	}
+	if len(p.Messages) == 0 {
+		return nil, errors.New("No valid message events")
+	}
+
 	return p, nil
 }
 
@@ -88,7 +92,6 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 		u := user{}
 		fe := FormattedEvent{}
 		switch t := v.MessageType; t {
-
 		case "SubscriptionPurchased", "SubscriptionCancelRequestProcessed":
 			ctx, err = parseSubscription([]byte(*v.Body))
 		default:
