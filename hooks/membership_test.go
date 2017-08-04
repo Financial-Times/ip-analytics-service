@@ -47,13 +47,39 @@ func TestMembershipHandlerOKResponse(t *testing.T) {
 	}
 }
 
+func TestMembershipHandlerFalseConfirm(t *testing.T) {
+	pubQueue = make(chan queue.Message, 1)
+	rr := httptest.NewRecorder()
+	h := &MembershipHandler{pubQueue}
+	handler := appHandler(h.HandlePOST)
+	msg := `{"Messages": [{"MessageType": "SubscriptionPurchased", "Body": {"uuid": "test"}}]}`
+	b := bytes.NewReader([]byte(msg))
+	req, err := http.NewRequest("POST", "/membership", b)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Simulate positive response from publisher
+	go func() {
+		msg := <-pubQueue
+		msg.Response <- false
+	}()
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusInternalServerError {
+		t.Errorf("Handler returned %v but expected %v",
+			status, http.StatusInternalServerError)
+	}
+}
+
 var invalidReqTests = []struct {
 	input    string
 	expected int
 }{
-	{`In{valid{Json}`, http.StatusBadRequest},
-	{`{"subscription": [{"Body": {"uuid": "test"}}]}`, http.StatusBadRequest},
-	{`{"subscription": {"Messages": [{"MessageType": "Not Exist", "Body": {"uuid": "test"}}]}}`, http.StatusBadRequest},
+	{`In{valid{Json}`, http.StatusBadRequest},                                                                           // bad JSON
+	{`{"subscription": [{"Body": {"uuid": "test"}}]}`, http.StatusBadRequest},                                           // Invalid body
+	{`{"subscription": {"Messages": [{"MessageType": "Not Exist", "Body": {"uuid": "test"}}]}}`, http.StatusBadRequest}, // Non-existant MessageType
+	{`{"subscription": {"Messages": [{"MessageType": "SubscriptionPurchased"}]}}`, http.StatusBadRequest},               // Missing Body
 }
 
 func TestMembershipHandlerBadResponse(t *testing.T) {
