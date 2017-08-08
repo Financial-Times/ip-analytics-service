@@ -28,7 +28,6 @@ func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *
 	case "gzip":
 		reader, err := gzip.NewReader(r.Body)
 		if err != nil {
-			log.Println("here")
 			return &AppError{err, "Bad Request", http.StatusBadRequest}
 		}
 		defer reader.Close()
@@ -89,6 +88,9 @@ type membershipEvent struct {
 func parseEvents(body io.ReadCloser) (*membershipEvents, error) {
 	p := &membershipEvents{}
 	b, err := ioutil.ReadAll(body)
+	if err != nil {
+		return nil, err
+	}
 	err = json.Unmarshal(b, p)
 	if err != nil {
 		return nil, err
