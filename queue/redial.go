@@ -23,6 +23,10 @@ func (s Session) Close() error {
 
 // Redial continually connects to host, exits when not possible
 func Redial(ctx context.Context, url string, queueName string) chan chan Session {
+	if queueName == "" {
+		log.Fatalf("No queueName provided")
+	}
+
 	sessions := make(chan chan Session)
 
 	go func() {
