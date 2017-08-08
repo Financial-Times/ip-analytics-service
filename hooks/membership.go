@@ -18,6 +18,7 @@ type MembershipHandler struct {
 
 // HandlePOST publishes received body to queue in correct format
 func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *AppError {
+	log.Printf("%v", r)
 	if r.Method != "POST" {
 		return &AppError{errors.New("Not Found"), "Not Found", http.StatusNotFound}
 	}
