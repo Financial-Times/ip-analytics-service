@@ -75,7 +75,6 @@ type membershipEvent struct {
 func parseEvents(body io.Reader) (*membershipEvents, error) {
 	p := &membershipEvents{}
 	b, err := ioutil.ReadAll(body)
-	log.Printf("Body: %v", string(b))
 	err = json.Unmarshal(b, p)
 	if err != nil {
 		return nil, err
