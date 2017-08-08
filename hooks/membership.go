@@ -1,6 +1,7 @@
 package hooks
 
 import (
+	"compress/gzip"
 	"encoding/json"
 	"errors"
 	"io"
@@ -18,12 +19,23 @@ type MembershipHandler struct {
 
 // HandlePOST publishes received body to queue in correct format
 func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *AppError {
-	log.Printf("%v", r)
 	if r.Method != "POST" {
 		return &AppError{errors.New("Not Found"), "Not Found", http.StatusNotFound}
 	}
 
-	e, err := parseEvents(r.Body)
+	var body io.ReadCloser
+	switch r.Header.Get("Content-Encoding") {
+	case "gzip":
+		body, err := gzip.NewReader(r.Body)
+		if err != nil {
+			return &AppError{err, "Bad Request", http.StatusBadRequest}
+		}
+		defer body.Close()
+	default:
+		body = r.Body
+	}
+
+	e, err := parseEvents(body)
 	if err != nil {
 		if e, ok := err.(*json.SyntaxError); ok {
 			log.Printf("json error at byte offset %d", e.Offset)
@@ -36,14 +48,14 @@ func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *
 		return &AppError{err, "Bad Request", http.StatusBadRequest}
 	}
 
-	body, err := json.Marshal(fe)
+	b, err := json.Marshal(fe)
 	if err != nil {
 		return &AppError{err, "Bad Request", http.StatusBadRequest}
 	}
 
 	confirm := make(chan bool, 1) // Create a confirm channel to wait for confirmation from publisher
 	msg := queue.Message{
-		Body:     body,
+		Body:     b,
 		Response: confirm,
 	}
 	m.Publish <- msg

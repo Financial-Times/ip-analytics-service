@@ -11,32 +11,32 @@
     {
       "checksumSHA1": "cEd9PmK1xSMFv66QnXX+eQkR02Q=",
       "path": "github.com/financial-times/ip-events-service/cmd/hook_server",
-      "revision": "38cd3d1150934e16bab96c2551ed07f49a38604b",
-      "revisionTime": "2017-08-08T12:08:39Z"
+      "revision": "b6a9e98d82c3e9b2f69a1e7c98bb7bda6e24f2ee",
+      "revisionTime": "2017-08-08T12:09:24Z"
     },
     {
       "checksumSHA1": "el5MXO6kZI4AhCpRtzCKz+j8KBs=",
       "path": "github.com/financial-times/ip-events-service/cmd/hook_worker",
-      "revision": "38cd3d1150934e16bab96c2551ed07f49a38604b",
-      "revisionTime": "2017-08-08T12:08:39Z"
+      "revision": "b6a9e98d82c3e9b2f69a1e7c98bb7bda6e24f2ee",
+      "revisionTime": "2017-08-08T12:09:24Z"
     },
     {
       "checksumSHA1": "3i2o0Z2GvPUv5U8kBy4wtAg1h/w=",
       "path": "github.com/financial-times/ip-events-service/config",
-      "revision": "38cd3d1150934e16bab96c2551ed07f49a38604b",
-      "revisionTime": "2017-08-08T12:08:39Z"
+      "revision": "b6a9e98d82c3e9b2f69a1e7c98bb7bda6e24f2ee",
+      "revisionTime": "2017-08-08T12:09:24Z"
     },
     {
       "checksumSHA1": "ozm52x1xE8Axmu/HqYdpb62XBMo=",
       "path": "github.com/financial-times/ip-events-service/hooks",
-      "revision": "38cd3d1150934e16bab96c2551ed07f49a38604b",
-      "revisionTime": "2017-08-08T12:08:39Z"
+      "revision": "b6a9e98d82c3e9b2f69a1e7c98bb7bda6e24f2ee",
+      "revisionTime": "2017-08-08T12:09:24Z"
     },
     {
       "checksumSHA1": "vLkL8RHHYKzaZXY5hs47pwF0Zik=",
       "path": "github.com/financial-times/ip-events-service/queue",
-      "revision": "38cd3d1150934e16bab96c2551ed07f49a38604b",
-      "revisionTime": "2017-08-08T12:08:39Z"
+      "revision": "b6a9e98d82c3e9b2f69a1e7c98bb7bda6e24f2ee",
+      "revisionTime": "2017-08-08T12:09:24Z"
     },
     {
       "checksumSHA1": "3XsmaR3i5euGHpt150DerScyOco=",
