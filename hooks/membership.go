@@ -119,6 +119,7 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 		case "SubscriptionPurchased", "SubscriptionCancelRequestProcessed":
 			ctx, err = parseSubscription([]byte(*v.Body))
 		default:
+			ctx = &Subscription{}
 			//return nil, errors.New("MessageType is not valid")
 		}
 		if err != nil {
