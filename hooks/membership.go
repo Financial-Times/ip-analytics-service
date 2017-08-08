@@ -35,7 +35,6 @@ func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *
 	default:
 		reader = r.Body
 	}
-	log.Printf("%v", reader)
 
 	e, err := parseEvents(reader)
 	if err != nil {
