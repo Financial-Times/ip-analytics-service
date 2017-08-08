@@ -2,49 +2,51 @@ package hooks
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"io/ioutil"
 	"net/http"
 
-	"github.com/financial-times/ip-events-service/config"
-	"github.com/streadway/amqp"
+	"github.com/financial-times/ip-events-service/queue"
 )
-
-// Publisher interface for rabbitmq publisher
-type Publisher interface {
-	Publish(body string, contentType string, ch *amqp.Channel, cfg config.Config) error
-}
 
 // MembershipHandler for handling HTTP requests and publishing to queue
 type MembershipHandler struct {
-	Publisher
+	Publish chan queue.Message
 }
 
 // HandlePOST publishes received body to queue in correct format
-func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
+func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *AppError {
 	if r.Method != "POST" {
-		errorHandler(w, "Not Found", http.StatusNotFound)
-		return
+		return &AppError{errors.New("Not Found"), "Not Found", http.StatusNotFound}
 	}
 
-	_, err := parseBody(r.Body)
+	e, err := parseEvents(r.Body)
 	if err != nil {
-		errorHandler(w, err.Error(), http.StatusBadRequest)
-		return
+		return &AppError{err, "Bad Request", http.StatusBadRequest}
 	}
 
-	//m.Publisher.Publish(
+	fe, err := formatEvents(e.Messages)
+	if err != nil {
+		return &AppError{err, "Bad Request", http.StatusBadRequest}
+	}
+
+	body, err := json.Marshal(fe)
+	if err != nil {
+		return &AppError{err, "Bad Request", http.StatusBadRequest}
+	}
+
+	confirm := make(chan bool, 1) // Create a confirm channel to wait for confirmation from publisher
+	msg := queue.Message{body, confirm}
+	m.Publish <- msg
+
+	ok := <-confirm
+	if !ok {
+		return &AppError{errors.New("Internal Server Error"), "Internal Server Error", http.StatusInternalServerError}
+	}
+
 	successHandler(w, r)
-}
-
-func parseBody(body io.Reader) (*membershipEvents, error) {
-	b, err := ioutil.ReadAll(body)
-	p := &membershipEvents{}
-	err = json.Unmarshal(b, p)
-	if err != nil {
-		return nil, err
-	}
-	return p, nil
+	return nil
 }
 
 type membershipEvents struct {
@@ -62,36 +64,97 @@ type membershipEvent struct {
 	OriginSystemID     string           `json:"originSystemId"`
 }
 
-//type user struct {
-//UUID string `json:"ft_guid"`
-//}
+// TODO refactor all parse events to use one function and then case/type
+func parseEvents(body io.Reader) (*membershipEvents, error) {
+	p := &membershipEvents{}
+	b, err := ioutil.ReadAll(body)
+	err = json.Unmarshal(b, p)
+	if err != nil {
+		return nil, err
+	}
+	if len(p.Messages) == 0 {
+		return nil, errors.New("No valid message events")
+	}
 
-// context should include a message type i.e. SubscriptionCancelRequestProcessed
-//type context struct {
-//}
-
-//type system struct {
-//Source  string `json:"source"`
-//Version string `json:"version"`
-//}
-
-type subscriptionChange struct {
-	Subscription subscription `json:"subscription"`
+	return p, nil
 }
 
-type subscription struct {
+func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
+	e := make([]FormattedEvent, 0)
+	s := system{"membership"}
+	for _, v := range me {
+		if v.Body == nil {
+			return nil, errors.New("Bad Request - Body Required")
+		}
+
+		var err error
+		var ctx *Subscription
+		u := user{}
+		fe := FormattedEvent{}
+		switch t := v.MessageType; t {
+		case "SubscriptionPurchased", "SubscriptionCancelRequestProcessed":
+			ctx, err = parseSubscription([]byte(*v.Body))
+		default:
+			return nil, errors.New("MessageType is not valid")
+		}
+		if err != nil {
+			return nil, err
+		}
+		// Assign UUID to user and remove from context
+		u.UUID = ctx.UUID
+		ctx.UUID = ""
+		ctx.MessageType = v.MessageType
+		fe.System = s
+		fe.Context = ctx
+		fe.User = u
+		e = append(e, fe)
+	}
+	return e, nil
+}
+
+func parseSubscription(body []byte) (*Subscription, error) {
+	s := &subscriptionChange{}
+	err := json.Unmarshal(body, s)
+	if err != nil {
+		return nil, err
+	}
+	return &s.Subscription, nil
+}
+
+type subscriptionChange struct {
+	Subscription Subscription `json:"subscription"`
+}
+
+// FormattedEvent published to queue for consumption
+type FormattedEvent struct {
+	User    user          `json:"user"`
+	Context *Subscription `json:"context"`
+	System  system        `json:"system"`
+}
+
+type user struct {
+	UUID string `json:"ft_guid"`
+}
+
+type system struct {
+	Source string `json:"source"`
+}
+
+// Subscription has necessary information for changes
+type Subscription struct {
 	UUID            string `json:"userId"`
 	PaymentMethodID string `json:"paymentType,omitempty"`
 	OfferID         string `json:"offerId,omitempty"`
 	Product         struct {
-		ID   string `json:"id"`
-		Name string `json:"name"`
+		ID   string `json:"id,omitempty"`
+		Name string `json:"name,omitempty"`
 	} `json:"product,omitempty"`
 	SegmentID          string `json:"segmentId,omitempty"`
-	ProductRatePlanID  string
-	SubscriptionID     string
-	SubscriptionNumber string
-	InvoiceID          string
-	InvoiceNumber      string
+	ProductRatePlanID  string `json:"productRatePlanId,omitempty"`
+	SubscriptionID     string `json:"subscriptionId,omitempty"`
+	SubscriptionNumber string `json:"subscriptionNumber,omitempty"`
+	InvoiceID          string `json:"invoiceId,omitempty"`
+	InvoiceNumber      string `json:"invoiceNumber,omitempty"`
 	CancellationReason string `json:"cancellationReason,omitempty"`
+	MessageType        string `json:"messageType"`
 }
