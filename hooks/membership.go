@@ -85,7 +85,7 @@ type membershipEvent struct {
 }
 
 // TODO refactor all parse events to use one function and then case/type
-func parseEvents(body io.Reader) (*membershipEvents, error) {
+func parseEvents(body io.ReadCloser) (*membershipEvents, error) {
 	p := &membershipEvents{}
 	b, err := ioutil.ReadAll(body)
 	err = json.Unmarshal(b, p)
