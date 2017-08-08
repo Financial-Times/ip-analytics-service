@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"flag"
+	"io"
+	"io/ioutil"
 	"log"
 	"os"
 
@@ -18,7 +20,13 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	msgChan := queue.Write(os.Stdout)
+	var writer io.Writer
+	if c.GOENV == "production" {
+		writer = ioutil.Discard
+	} else {
+		writer = os.Stdout
+	}
+	msgChan := queue.Write(writer)
 	ctx, done := context.WithCancel(context.Background())
 
 	go func() {

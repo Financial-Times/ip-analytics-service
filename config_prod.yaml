@@ -2,3 +2,4 @@ rabbithost: ${CLOUDAMQP_URL}
 queuename: ${QUEUE_NAME}
 apikey: ${API_KEY}
 port: ${PORT}
+goenv: ${GO_ENV}
