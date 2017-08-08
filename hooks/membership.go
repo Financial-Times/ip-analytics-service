@@ -28,6 +28,7 @@ func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *
 	case "gzip":
 		reader, err := gzip.NewReader(r.Body)
 		if err != nil {
+			log.Println("here")
 			return &AppError{err, "Bad Request", http.StatusBadRequest}
 		}
 		defer reader.Close()
