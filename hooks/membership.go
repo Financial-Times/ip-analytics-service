@@ -23,19 +23,19 @@ func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *
 		return &AppError{errors.New("Not Found"), "Not Found", http.StatusNotFound}
 	}
 
-	var body io.ReadCloser
+	var reader io.ReadCloser
 	switch r.Header.Get("Content-Encoding") {
 	case "gzip":
-		body, err := gzip.NewReader(r.Body)
+		reader, err := gzip.NewReader(r.Body)
 		if err != nil {
 			return &AppError{err, "Bad Request", http.StatusBadRequest}
 		}
-		defer body.Close()
+		defer reader.Close()
 	default:
-		body = r.Body
+		reader = r.Body
 	}
 
-	e, err := parseEvents(body)
+	e, err := parseEvents(reader)
 	if err != nil {
 		if e, ok := err.(*json.SyntaxError); ok {
 			log.Printf("json error at byte offset %d", e.Offset)
