@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 
 	"github.com/financial-times/ip-events-service/queue"
@@ -23,6 +24,9 @@ func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *
 
 	e, err := parseEvents(r.Body)
 	if err != nil {
+		if e, ok := err.(*json.SyntaxError); ok {
+			log.Printf("json error at byte offset %d", e.Offset)
+		}
 		return &AppError{err, "Bad Request", http.StatusBadRequest}
 	}
 
@@ -37,7 +41,10 @@ func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *
 	}
 
 	confirm := make(chan bool, 1) // Create a confirm channel to wait for confirmation from publisher
-	msg := queue.Message{body, confirm}
+	msg := queue.Message{
+		Body:     body,
+		Response: confirm,
+	}
 	m.Publish <- msg
 
 	ok := <-confirm
