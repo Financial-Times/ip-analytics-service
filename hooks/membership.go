@@ -117,8 +117,6 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 		fe := FormattedEvent{}
 		switch t := v.MessageType; t {
 		case "SubscriptionPurchased", "SubscriptionCancelRequestProcessed":
-			log.Printf("%v", v)
-			log.Printf("%v", string(*v.Body))
 			ctx, err = parseSubscription([]byte(*v.Body))
 		default:
 			//return nil, errors.New("MessageType is not valid")
