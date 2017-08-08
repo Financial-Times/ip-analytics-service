@@ -35,6 +35,7 @@ func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *
 	default:
 		reader = r.Body
 	}
+	log.Printf("%v", reader)
 
 	e, err := parseEvents(reader)
 	if err != nil {
@@ -119,7 +120,8 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 		case "SubscriptionPurchased", "SubscriptionCancelRequestProcessed":
 			ctx, err = parseSubscription([]byte(*v.Body))
 		default:
-			return nil, errors.New("MessageType is not valid")
+			return nil, nil
+			//return nil, errors.New("MessageType is not valid")
 		}
 		if err != nil {
 			return nil, err
