@@ -75,14 +75,14 @@ type membershipEvents struct {
 }
 
 type membershipEvent struct {
-	Body               *json.RawMessage `json:"body"`
-	ContentType        string           `json:"contentType"`
-	MessageID          string           `json:"messageId"`
-	MessageTimestamp   string           `json:"messageTimestamp"`
-	MessageType        string           `json:"messageType"`
-	OriginHost         string           `json:"originHost"`
-	OriginHostLocation string           `json:"originHostLocation"`
-	OriginSystemID     string           `json:"originSystemId"`
+	Body               string `json:"body"`
+	ContentType        string `json:"contentType"`
+	MessageID          string `json:"messageId"`
+	MessageTimestamp   string `json:"messageTimestamp"`
+	MessageType        string `json:"messageType"`
+	OriginHost         string `json:"originHost"`
+	OriginHostLocation string `json:"originHostLocation"`
+	OriginSystemID     string `json:"originSystemId"`
 }
 
 // TODO refactor all parse events to use one function and then case/type
@@ -107,7 +107,7 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 	e := make([]FormattedEvent, 0)
 	s := system{"membership"}
 	for _, v := range me {
-		if v.Body == nil {
+		if v.Body == "" {
 			return nil, errors.New("Bad Request - Body Required")
 		}
 
@@ -117,7 +117,7 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 		fe := FormattedEvent{}
 		switch t := v.MessageType; t {
 		case "SubscriptionPurchased", "SubscriptionCancelRequestProcessed":
-			ctx, err = parseSubscription([]byte(*v.Body))
+			ctx, err = parseSubscription([]byte(v.Body))
 		default:
 			ctx = &Subscription{}
 			//return nil, errors.New("MessageType is not valid")
