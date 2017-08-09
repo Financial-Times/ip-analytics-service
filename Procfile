@@ -1,2 +1,2 @@
-web: ./bin/run_prod_server.sh
-worker: ./bin/run_prod_worker.sh
+web: ./bin/run.sh server
+worker: ./bin/run.sh worker

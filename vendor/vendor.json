@@ -1,61 +1,61 @@
 {
-	"comment": "",
-	"heroku": {
-		"goVersion": "go1.8.3",
-		"install": [
-			"./cmd/..."
-		]
-	},
-	"ignore": "test",
-	"package": [
-		{
-			"checksumSHA1": "2/5Usq6ZHHRIj0ZeJ3XzdS9qcCQ=",
-			"path": "github.com/Financial-Times/email-platform-tools/config",
-			"revision": "f0623d710bec8c1e161b8bb8e2e315f7905a8024",
-			"revisionTime": "2017-06-28T09:12:09Z"
-		},
-		{
-			"checksumSHA1": "cEd9PmK1xSMFv66QnXX+eQkR02Q=",
-			"path": "github.com/financial-times/ip-events-service/cmd/hook_server",
-			"revision": "65e544d174529311a8419e003bc3ad35a831b51f",
-			"revisionTime": "2017-08-08T13:58:37Z"
-		},
-		{
-			"checksumSHA1": "GOu8Rzqcdp+qSNYapkkVVp+npEs=",
-			"path": "github.com/financial-times/ip-events-service/cmd/hook_worker",
-			"revision": "65e544d174529311a8419e003bc3ad35a831b51f",
-			"revisionTime": "2017-08-08T13:58:37Z"
-		},
-		{
-			"checksumSHA1": "3i2o0Z2GvPUv5U8kBy4wtAg1h/w=",
-			"path": "github.com/financial-times/ip-events-service/config",
-			"revision": "65e544d174529311a8419e003bc3ad35a831b51f",
-			"revisionTime": "2017-08-08T13:58:37Z"
-		},
-		{
-			"checksumSHA1": "cWgkP9p+PjBEgkOludhV9OwC6gQ=",
-			"path": "github.com/financial-times/ip-events-service/hooks",
-			"revision": "65e544d174529311a8419e003bc3ad35a831b51f",
-			"revisionTime": "2017-08-08T13:58:37Z"
-		},
-		{
-			"checksumSHA1": "yfH9bEtohSNi0JmozdistSU0AoQ=",
-			"path": "github.com/financial-times/ip-events-service/queue",
-			"revision": "65e544d174529311a8419e003bc3ad35a831b51f",
-			"revisionTime": "2017-08-08T13:58:37Z"
-		},
-		{
-			"checksumSHA1": "3XsmaR3i5euGHpt150DerScyOco=",
-			"path": "github.com/streadway/amqp",
-			"revision": "2cbfe40c9341ad63ba23e53013b3ddc7989d801c",
-			"revisionTime": "2017-07-07T20:29:55Z"
-		},
-		{
-			"checksumSHA1": "o20lmjzBQyKD5LfLZ3OhUoMkLds=",
-			"path": "gopkg.in/yaml.v2",
-			"revision": "25c4ec802a7d637f88d584ab26798e94ad14c13b",
-			"revisionTime": "2017-07-21T12:20:51Z"
-		}
-	],
-	"rootPath": "github.com/financial-times/ip-events-service"
+  "comment": "",
+  "ignore": "test",
+  "package": [
+    {
+      "checksumSHA1": "2/5Usq6ZHHRIj0ZeJ3XzdS9qcCQ=",
+      "path": "github.com/Financial-Times/email-platform-tools/config",
+      "revision": "f0623d710bec8c1e161b8bb8e2e315f7905a8024",
+      "revisionTime": "2017-06-28T09:12:09Z"
+    },
+    {
+      "checksumSHA1": "cEd9PmK1xSMFv66QnXX+eQkR02Q=",
+      "path": "github.com/financial-times/ip-events-service/cmd/hook_server",
+      "revision": "3f67fc0204479913da6bfa20a20fb7595ef1a3ab",
+      "revisionTime": "2017-08-09T09:06:48Z"
+    },
+    {
+      "checksumSHA1": "GOu8Rzqcdp+qSNYapkkVVp+npEs=",
+      "path": "github.com/financial-times/ip-events-service/cmd/hook_worker",
+      "revision": "3f67fc0204479913da6bfa20a20fb7595ef1a3ab",
+      "revisionTime": "2017-08-09T09:06:48Z"
+    },
+    {
+      "checksumSHA1": "3i2o0Z2GvPUv5U8kBy4wtAg1h/w=",
+      "path": "github.com/financial-times/ip-events-service/config",
+      "revision": "3f67fc0204479913da6bfa20a20fb7595ef1a3ab",
+      "revisionTime": "2017-08-09T09:06:48Z"
+    },
+    {
+      "checksumSHA1": "cWgkP9p+PjBEgkOludhV9OwC6gQ=",
+      "path": "github.com/financial-times/ip-events-service/hooks",
+      "revision": "3f67fc0204479913da6bfa20a20fb7595ef1a3ab",
+      "revisionTime": "2017-08-09T09:06:48Z"
+    },
+    {
+      "checksumSHA1": "yfH9bEtohSNi0JmozdistSU0AoQ=",
+      "path": "github.com/financial-times/ip-events-service/queue",
+      "revision": "3f67fc0204479913da6bfa20a20fb7595ef1a3ab",
+      "revisionTime": "2017-08-09T09:06:48Z"
+    },
+    {
+      "checksumSHA1": "3XsmaR3i5euGHpt150DerScyOco=",
+      "path": "github.com/streadway/amqp",
+      "revision": "2cbfe40c9341ad63ba23e53013b3ddc7989d801c",
+      "revisionTime": "2017-07-07T20:29:55Z"
+    },
+    {
+      "checksumSHA1": "o20lmjzBQyKD5LfLZ3OhUoMkLds=",
+      "path": "gopkg.in/yaml.v2",
+      "revision": "25c4ec802a7d637f88d584ab26798e94ad14c13b",
+      "revisionTime": "2017-07-21T12:20:51Z"
+    }
+  ],
+  "rootPath": "github.com/financial-times/ip-events-service",
+  "heroku": {
+    "install": [
+      "./cmd/..."
+    ],
+    "goVersion": "go1.8.3"
+  }
 }
