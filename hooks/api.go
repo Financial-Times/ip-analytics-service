@@ -34,7 +34,8 @@ func (fn appHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func RegisterHandlers(mux *http.ServeMux, cfg config.Config, publish chan queue.Message) {
 	prefix := "/webhooks"
 	paths := map[string]Handler{
-		prefix + "/membership": &MembershipHandler{publish},
+		prefix + "/membership":       &MembershipHandler{publish},
+		prefix + "/user-preferences": &PreferenceHandler{publish},
 	}
 	for p, h := range paths {
 		mux.Handle(p, authMiddleware(h.HandlePOST, cfg.APIKey))
@@ -53,4 +54,19 @@ func authMiddleware(f appHandler, key string) appHandler {
 func successHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.Write([]byte("OK"))
+}
+
+// FormattedEvent published to queue for consumption
+type FormattedEvent struct {
+	User    user        `json:"user"`
+	Context interface{} `json:"context"`
+	System  system      `json:"system"`
+}
+
+type user struct {
+	UUID string `json:"ft_guid"`
+}
+
+type system struct {
+	Source string `json:"source"`
 }

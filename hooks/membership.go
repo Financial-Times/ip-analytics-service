@@ -105,7 +105,7 @@ func parseEvents(body io.ReadCloser) (*membershipEvents, error) {
 
 func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 	e := make([]FormattedEvent, 0)
-	s := system{"membership"}
+	s := system{"internal-products"}
 	for _, v := range me {
 		if v.Body == "" {
 			return nil, errors.New("Bad Request - Body Required")
@@ -150,24 +150,9 @@ type subscriptionChange struct {
 	Subscription Subscription `json:"subscription"`
 }
 
-// FormattedEvent published to queue for consumption
-type FormattedEvent struct {
-	User    user          `json:"user"`
-	Context *Subscription `json:"context"`
-	System  system        `json:"system"`
-}
-
-type user struct {
-	UUID string `json:"ft_guid"`
-}
-
-type system struct {
-	Source string `json:"source"`
-}
-
 // Subscription has necessary information for changes
 type Subscription struct {
-	UUID            string `json:"userId"`
+	UUID            string `json:"userId,omitempty"`
 	PaymentMethodID string `json:"paymentType,omitempty"`
 	OfferID         string `json:"offerId,omitempty"`
 	Product         struct {
