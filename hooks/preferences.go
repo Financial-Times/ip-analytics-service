@@ -115,6 +115,8 @@ func formatSubscriptionEvent(p *preferenceEvent) ([]FormattedEvent, error) {
 	u.UUID = ctx.UUID
 	ctx.UUID = ""
 	ctx.MessageType = p.MessageType
+	ctx.Timestamp = p.MessageTimestamp
+	ctx.MessageID = p.MessageID
 	fe.System = s
 	fe.Context = ctx
 	fe.User = u
@@ -142,4 +144,6 @@ type preference struct {
 	Expired                  bool     `json:"expired"`
 	Lists                    []string `json:"lists"`
 	MessageType              string   `json:"messageType"`
+	MessageID                string   `json:"messageId"`
+	Timestamp                string   `json:"timestamp"`
 }

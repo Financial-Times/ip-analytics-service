@@ -129,6 +129,8 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 		u.UUID = ctx.UUID
 		ctx.UUID = ""
 		ctx.MessageType = v.MessageType
+		ctx.Timestamp = v.MessageTimestamp
+		ctx.MessageID = v.MessageID
 		fe.System = s
 		fe.Context = ctx
 		fe.User = u
@@ -167,4 +169,6 @@ type Subscription struct {
 	InvoiceNumber      string `json:"invoiceNumber,omitempty"`
 	CancellationReason string `json:"cancellationReason,omitempty"`
 	MessageType        string `json:"messageType"`
+	MessageID          string `json:"messageId"`
+	Timestamp          string `json:"timestamp"`
 }
