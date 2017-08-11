@@ -49,7 +49,7 @@ func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *
 		return &AppError{err, "Bad Request", http.StatusBadRequest}
 	}
 
-	if fe == nil {
+	if len(fe) == 0 {
 		successHandler(w, r)
 		return nil
 	}
@@ -126,7 +126,7 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 		case "UserCreated":
 			ctx, err = parseUserUpdate(&v, &u)
 		default:
-			return nil, nil
+			continue
 		}
 		if err != nil {
 			return nil, err

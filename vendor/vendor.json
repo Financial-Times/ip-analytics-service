@@ -167,38 +167,38 @@
     {
       "checksumSHA1": "cEd9PmK1xSMFv66QnXX+eQkR02Q=",
       "path": "github.com/financial-times/ip-events-service/cmd/hook_server",
-      "revision": "73f7ae14cbf82c14ebdc8f19f9ed99c990c8bfc8",
-      "revisionTime": "2017-08-11T15:00:47Z"
+      "revision": "8cf73592da6725dbf0c1cec3f3f7e5935a33e8ed",
+      "revisionTime": "2017-08-11T15:05:01Z"
     },
     {
       "checksumSHA1": "y9G1Sm2g5amCHqpAJvQk88jczig=",
       "path": "github.com/financial-times/ip-events-service/cmd/hook_worker",
-      "revision": "73f7ae14cbf82c14ebdc8f19f9ed99c990c8bfc8",
-      "revisionTime": "2017-08-11T15:00:47Z"
+      "revision": "8cf73592da6725dbf0c1cec3f3f7e5935a33e8ed",
+      "revisionTime": "2017-08-11T15:05:01Z"
     },
     {
       "checksumSHA1": "knsEdV51PH47u4Thnrf+rJtt6TA=",
       "path": "github.com/financial-times/ip-events-service/config",
-      "revision": "73f7ae14cbf82c14ebdc8f19f9ed99c990c8bfc8",
-      "revisionTime": "2017-08-11T15:00:47Z"
+      "revision": "8cf73592da6725dbf0c1cec3f3f7e5935a33e8ed",
+      "revisionTime": "2017-08-11T15:05:01Z"
     },
     {
       "checksumSHA1": "6jujC13O0pWl+Fb7Tz92MnfhE/k=",
       "path": "github.com/financial-times/ip-events-service/hooks",
-      "revision": "73f7ae14cbf82c14ebdc8f19f9ed99c990c8bfc8",
-      "revisionTime": "2017-08-11T15:00:47Z"
+      "revision": "8cf73592da6725dbf0c1cec3f3f7e5935a33e8ed",
+      "revisionTime": "2017-08-11T15:05:01Z"
     },
     {
       "checksumSHA1": "Tgkx50fofF9dlxPH0DvtiLwEuhA=",
       "path": "github.com/financial-times/ip-events-service/kinesis",
-      "revision": "73f7ae14cbf82c14ebdc8f19f9ed99c990c8bfc8",
-      "revisionTime": "2017-08-11T15:00:47Z"
+      "revision": "8cf73592da6725dbf0c1cec3f3f7e5935a33e8ed",
+      "revisionTime": "2017-08-11T15:05:01Z"
     },
     {
       "checksumSHA1": "dVQnjo572KsTAgx40ZHJFkr7rY4=",
       "path": "github.com/financial-times/ip-events-service/queue",
-      "revision": "73f7ae14cbf82c14ebdc8f19f9ed99c990c8bfc8",
-      "revisionTime": "2017-08-11T15:00:47Z"
+      "revision": "8cf73592da6725dbf0c1cec3f3f7e5935a33e8ed",
+      "revisionTime": "2017-08-11T15:05:01Z"
     },
     {
       "checksumSHA1": "Ecn0UexWoWRG6Di0wdWvIfms/jc=",
