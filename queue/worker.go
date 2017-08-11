@@ -21,6 +21,7 @@ func Consume(sessions chan chan Session, msgs chan<- Message, queueName string) 
 
 		for msg := range deliveries {
 			msgs <- Message{Body: msg.Body}
+			// TODO send response chan and wait for confirmation before ack'in or nack'in
 			sub.Ack(msg.DeliveryTag, false)
 		}
 	}
