@@ -21,13 +21,14 @@ func Consume(sessions chan chan Session, msgs chan<- Message, queueName string) 
 
 		for msg := range deliveries {
 			msgs <- Message{Body: msg.Body}
+			// TODO send response chan and wait for confirmation before ack'in or nack'in
 			sub.Ack(msg.DeliveryTag, false)
 		}
 	}
 }
 
 // Write used to write consumed message
-func Write(w io.Writer) chan<- Message {
+func Write(w io.Writer) chan Message {
 	msgs := make(chan Message)
 	go func() {
 		for msg := range msgs {
