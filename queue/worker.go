@@ -28,7 +28,7 @@ func Consume(sessions chan chan Session, msgs chan<- Message, queueName string) 
 }
 
 // Write used to write consumed message
-func Write(w io.Writer) chan<- Message {
+func Write(w io.Writer) chan Message {
 	msgs := make(chan Message)
 	go func() {
 		for msg := range msgs {
