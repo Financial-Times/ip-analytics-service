@@ -12,8 +12,8 @@ type Config struct {
 	QueueName     string `json:"queuename"`
 	Port          string `json:"port"`
 	AWSRegion     string `json:"awsregion"`
-	AWSAccessKey  string `json:"awsaccesskeyid"`
-	AWSSecret     string `json:"awssecretaccesskey"`
+	AWSAccessKey  string `json:"awsaccesskey"`
+	AWSSecret     string `json:"awssecret"`
 	KinesisStream string `json:"kinesisstream"`
 }
 

@@ -4,6 +4,6 @@ apikey: ${API_KEY}
 port: ${PORT}
 goenv: ${GO_ENV}
 awsregion: ${AWS_REGION}
-awsaccesskeyid: ${AWS_ACCESS_KEY_ID}
-awssecretaccesskey: ${AWS_SECRET_ACCESS_KEY}
+awsaccesskey: ${AWS_ACCESS_KEY_ID}
+awssecret: ${AWS_SECRET_ACCESS_KEY}
 kinesisstream: 'spoor-egest-uuid'
