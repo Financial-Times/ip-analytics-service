@@ -50,7 +50,8 @@ func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *
 	}
 
 	if fe == nil {
-		return &AppError{err, "Bad Request - Invalid MessageType", http.StatusBadRequest}
+		successHandler(w, r)
+		return nil
 	}
 
 	b, err := json.Marshal(fe)
