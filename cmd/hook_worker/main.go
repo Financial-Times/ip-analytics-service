@@ -3,12 +3,13 @@ package main
 import (
 	"context"
 	"flag"
-	"io"
-	"io/ioutil"
+	//"io"
+	//"io/ioutil"
 	"log"
-	"os"
+	//"os"
 
 	"github.com/financial-times/ip-events-service/config"
+	"github.com/financial-times/ip-events-service/kinesis"
 	"github.com/financial-times/ip-events-service/queue"
 )
 
@@ -20,17 +21,23 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	var writer io.Writer
-	if c.GOENV == "production" {
-		writer = ioutil.Discard
-	} else {
-		writer = os.Stdout
-	}
-	msgChan := queue.Write(writer)
+	//var writer io.Writer
+	//if c.GOENV == "production" {
+	//writer = ioutil.Discard
+	//} else {
+	//writer = os.Stdout
+	//}
+	msgChan := make(chan queue.Message)
+	//msgChan := queue.Write(writer)
 	ctx, done := context.WithCancel(context.Background())
 
 	go func() {
 		queue.Consume(queue.Redial(ctx, c.RabbitHost, c.QueueName), msgChan, c.QueueName)
+		done()
+	}()
+
+	go func() {
+		kinesis.PutListen(msgChan, c)
 		done()
 	}()
 
