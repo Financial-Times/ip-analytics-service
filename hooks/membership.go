@@ -49,6 +49,10 @@ func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *
 		return &AppError{err, "Bad Request", http.StatusBadRequest}
 	}
 
+	if fe == nil {
+		return &AppError{err, "Bad Request - Invalid MessageType", http.StatusBadRequest}
+	}
+
 	b, err := json.Marshal(fe)
 	if err != nil {
 		return &AppError{err, "Bad Request", http.StatusBadRequest}
@@ -112,25 +116,21 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 		}
 
 		var err error
-		var ctx *Subscription
+		var ctx interface{}
 		u := user{}
 		fe := FormattedEvent{}
 		switch t := v.MessageType; t {
 		case "SubscriptionPurchased", "SubscriptionCancelRequestProcessed":
-			ctx, err = parseSubscription([]byte(v.Body))
+			ctx, err = parseSubscription(&v, &u)
+		case "UserCreated":
+			ctx, err = parseUserUpdate(&v, &u)
 		default:
-			ctx = &Subscription{}
-			//return nil, errors.New("MessageType is not valid")
+			return nil, nil
 		}
 		if err != nil {
 			return nil, err
 		}
-		// Assign UUID to user and remove from context
-		u.UUID = ctx.UUID
-		ctx.UUID = ""
-		ctx.MessageType = v.MessageType
-		ctx.Timestamp = v.MessageTimestamp
-		ctx.MessageID = v.MessageID
+
 		fe.System = s
 		fe.Context = ctx
 		fe.User = u
@@ -139,17 +139,43 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 	return e, nil
 }
 
-func parseSubscription(body []byte) (*Subscription, error) {
+// TODO refactor functions - remove duplication
+func parseSubscription(me *membershipEvent, u *user) (*Subscription, error) {
 	s := &subscriptionChange{}
-	err := json.Unmarshal(body, s)
+	err := json.Unmarshal([]byte(me.Body), s)
 	if err != nil {
 		return nil, err
 	}
-	return &s.Subscription, nil
+	sub := s.Subscription
+	sub.MessageType = me.MessageType
+	sub.Timestamp = me.MessageTimestamp
+	sub.MessageID = me.MessageID
+	u.UUID = sub.UUID
+	return &sub, nil
+}
+
+func parseUserUpdate(me *membershipEvent, u *user) (*Update, error) {
+	up := &UserUpdate{}
+	err := json.Unmarshal([]byte(me.Body), up)
+	if err != nil {
+		return nil, err
+	}
+	upd := up.Update
+	upd.MessageType = me.MessageType
+	upd.Timestamp = me.MessageTimestamp
+	upd.MessageID = me.MessageID
+	u.UUID = upd.UUID
+	return &upd, nil
 }
 
 type subscriptionChange struct {
 	Subscription Subscription `json:"subscription"`
+}
+
+type defaultChange struct {
+	MessageType string `json:"messageType"`
+	MessageID   string `json:"messageId"`
+	Timestamp   string `json:"timestamp"`
 }
 
 // Subscription has necessary information for changes
@@ -168,7 +194,20 @@ type Subscription struct {
 	InvoiceID          string `json:"invoiceId,omitempty"`
 	InvoiceNumber      string `json:"invoiceNumber,omitempty"`
 	CancellationReason string `json:"cancellationReason,omitempty"`
-	MessageType        string `json:"messageType"`
-	MessageID          string `json:"messageId"`
-	Timestamp          string `json:"timestamp"`
+	defaultChange
+}
+
+// UserUpdate represents a new or updated user
+type UserUpdate struct {
+	Update Update `json:"user"`
+}
+
+// Update details of UserUpdate
+type Update struct {
+	UUID string `json:"id,omitempty"`
+	defaultChange
+	// private fields
+	email     string
+	firstName string
+	lastName  string
 }
