@@ -5,13 +5,15 @@ import (
 	"log"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/kinesis"
 	"github.com/financial-times/ip-events-service/hooks"
+	"github.com/financial-times/ip-events-service/queue"
 )
 
 // PutListen starts aws/kinesis session and puts records from input chan
-func PutListen(msgs <-chan Message, region string, stream string) {
+func PutListen(msgs <-chan queue.Message, region string, stream string) {
 	creds := credentials.NewEnvCredentials()
 	_, err := creds.Get()
 	if err != nil {
@@ -35,9 +37,9 @@ func PutListen(msgs <-chan Message, region string, stream string) {
 				panic(err)
 			}
 
-			entries[i] = &kinesis.PurRecordsRequestEntry{
+			entries[i] = &kinesis.PutRecordsRequestEntry{
 				Data:         d,
-				PartitionKey: fe[i].User.UUID,
+				PartitionKey: aws.String(fe[i].User.UUID),
 			}
 		}
 
@@ -49,6 +51,7 @@ func PutListen(msgs <-chan Message, region string, stream string) {
 			log.Printf("%v\n", err)
 			panic(err)
 		}
+
+		log.Printf("%v\n", res)
 	}
-	log.Printf("%v\n", res)
 }
