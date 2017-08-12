@@ -8,7 +8,6 @@ source ./bin/lib/strict_mode.sh
 rm -rf vendor
 go clean ./...
 
-go get ./...
 go get -u github.com/kardianos/govendor
 govendor init
 govendor fetch +external 
