@@ -36,7 +36,7 @@ func (m *PreferenceHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *
 		reader = r.Body
 	}
 
-	e, err := parseSubscriptionEvent(reader)
+	e, err := parsePreferenceEvent(reader)
 	if err != nil {
 		if e, ok := err.(*json.SyntaxError); ok {
 			log.Printf("json error at byte offset %d", e.Offset)
@@ -44,9 +44,14 @@ func (m *PreferenceHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *
 		return &AppError{err, "Bad Request", http.StatusBadRequest}
 	}
 
-	fe, err := formatSubscriptionEvent(e)
+	fe, err := formatPreferenceEvent(e)
 	if err != nil {
 		return &AppError{err, "Bad Request", http.StatusBadRequest}
+	}
+
+	if fe == nil {
+		successHandler(w, r)
+		return nil
 	}
 
 	b, err := json.Marshal(fe)
@@ -79,7 +84,7 @@ type preferenceEvent struct {
 }
 
 // TODO refactor all parse events to use one function and then case/type
-func parseSubscriptionEvent(body io.ReadCloser) (*preferenceEvent, error) {
+func parsePreferenceEvent(body io.ReadCloser) (*preferenceEvent, error) {
 	p := &preferenceEvent{}
 	b, err := ioutil.ReadAll(body)
 	if err != nil {
@@ -93,7 +98,7 @@ func parseSubscriptionEvent(body io.ReadCloser) (*preferenceEvent, error) {
 	return p, nil
 }
 
-func formatSubscriptionEvent(p *preferenceEvent) ([]FormattedEvent, error) {
+func formatPreferenceEvent(p *preferenceEvent) ([]FormattedEvent, error) {
 	e := make([]FormattedEvent, 0)
 	s := system{"internal-products"}
 	var err error
@@ -105,8 +110,7 @@ func formatSubscriptionEvent(p *preferenceEvent) ([]FormattedEvent, error) {
 	case "UserPreferenceUpdated":
 		ctx, err = parsePreference([]byte(p.Body))
 	default:
-		ctx = &preference{}
-		//return nil, errors.New("MessageType is not valid")
+		return nil, nil
 	}
 	if err != nil {
 		return nil, err

@@ -3,6 +3,7 @@ package hooks
 import (
 	"bytes"
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -14,8 +15,9 @@ var validReqTests = []struct {
 	input    string
 	expected int
 }{
-	{`{"Messages": [{"MessageType": "SubscriptionPurchased", "Body": {"uuid": "test"}}]}`, http.StatusOK},
-	{`{"Messages": [{"MessageType": "SubscriptionCancelRequestProcessed", "Body": {"uuid": "test"}}]}`, http.StatusOK},
+	{`{"Messages": [{"MessageType": "SubscriptionPurchased", "Body": "{\"uuid\": \"test\"}"}]}`, http.StatusOK},
+	{`{"Messages": [{"MessageType": "SubscriptionCancelRequestProcessed", "Body": "{\"uuid\": \"test\"}"}]}`, http.StatusOK},
+	{`{"Messages": [{"MessageType": "UserCreated", "Body": "{\"uuid\": \"test\"}"}]}`, http.StatusOK},
 }
 
 var pubQueue chan queue.Message
@@ -28,7 +30,7 @@ func TestMembershipHandlerOKResponse(t *testing.T) {
 	for _, tt := range validReqTests {
 		rr = httptest.NewRecorder()
 		b := bytes.NewReader([]byte(tt.input))
-		req, err := http.NewRequest("POST", "/membership", b)
+		req, err := http.NewRequest("POST", "/webhooks/membership", b)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -52,9 +54,9 @@ func TestMembershipHandlerFalseConfirm(t *testing.T) {
 	rr := httptest.NewRecorder()
 	h := &MembershipHandler{pubQueue}
 	handler := appHandler(h.HandlePOST)
-	msg := `{"Messages": [{"MessageType": "SubscriptionPurchased", "Body": {"uuid": "test"}}]}`
+	msg := `{"Messages": [{"MessageType": "SubscriptionPurchased", "Body": "{\"uuid\": \"test\"}"}]}`
 	b := bytes.NewReader([]byte(msg))
-	req, err := http.NewRequest("POST", "/membership", b)
+	req, err := http.NewRequest("POST", "/webhooks/membership", b)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -89,7 +91,7 @@ func TestMembershipHandlerBadResponse(t *testing.T) {
 	for _, tt := range invalidReqTests {
 		rr = httptest.NewRecorder()
 		b := bytes.NewReader([]byte(tt.input))
-		req, err := http.NewRequest("POST", "/membership", b)
+		req, err := http.NewRequest("POST", "/webhooks/membership", b)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -107,7 +109,7 @@ func TestHandlePublishEvents(t *testing.T) {
 	pubQueue = make(chan queue.Message)
 	b := bytes.NewReader([]byte(`[{"subscription": {"MessageType": "test"}}]`))
 	rr := httptest.NewRecorder()
-	req, err := http.NewRequest("POST", "/membership", b)
+	req, err := http.NewRequest("POST", "/webhooks/membership", b)
 	if err != nil {
 		t.Errorf("Problem with http request %v", err)
 	}
@@ -117,24 +119,24 @@ func TestHandlePublishEvents(t *testing.T) {
 }
 
 func TestParseEvents(t *testing.T) {
-	msg := json.RawMessage(`{"UUID": "123"}`)
-	b := &membershipEvents{[]membershipEvent{membershipEvent{Body: &msg}}}
+	msg := `{"UUID": "123"}`
+	b := &membershipEvents{[]membershipEvent{membershipEvent{Body: msg}}}
 	bStr, err := json.Marshal(b)
 	if err != nil {
 		t.Errorf("JSON Marshal failed with error %v", err.Error())
 	}
-	pb, err := parseEvents(bytes.NewReader(bStr))
+	pb, err := parseEvents(ioutil.NopCloser(bytes.NewReader(bStr)))
 	if err != nil {
 		t.Errorf("parseEvents returned error %v", err.Error())
 	}
-	if *pb.Messages[0].Body == nil {
+	if pb.Messages[0].Body == "" {
 		t.Errorf("Expected parsed message to equal %v but got %v", b.Messages[0], pb.Messages[0])
 	}
 }
 
 func TestFormatEvents(t *testing.T) {
-	msg := json.RawMessage(`{"subscription": {"userId": "123"}}`)
-	m := []membershipEvent{membershipEvent{MessageType: "SubscriptionPurchased", Body: &msg}}
+	msg := `{"subscription": {"userId": "123"}}`
+	m := []membershipEvent{membershipEvent{MessageType: "SubscriptionPurchased", Body: msg}}
 	f, err := formatEvents(m)
 	if err != nil {
 		t.Errorf("Could not format events due to error %v", err)
@@ -143,8 +145,8 @@ func TestFormatEvents(t *testing.T) {
 		if v.User.UUID == "" {
 			t.Error("Expected UUID on formatted event User")
 		}
-		if v.Context.MessageType == "" {
-			t.Error("Expected MessageType on formatted event Context")
+		if _, ok := v.Context.(*Subscription); !ok {
+			t.Error("Expected Context to be a pointer to subscription")
 		}
 	}
 }
