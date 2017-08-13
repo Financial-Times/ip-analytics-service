@@ -1,7 +1,5 @@
 #!/bin/bash
 
-source ./bin/lib/strict_mode.sh
-
 task::server() {
   ./bin/prod_server.sh
 }
