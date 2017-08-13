@@ -10,7 +10,7 @@ go clean ./...
 
 go get -u github.com/kardianos/govendor
 govendor init
-govendor fetch +external 
+govendor add +external 
 
 # Add heroku details for vendor.json
 cat ./vendor/vendor.json | jq --argjson \
