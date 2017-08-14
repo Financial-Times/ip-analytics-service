@@ -107,7 +107,7 @@ func formatPreferenceEvent(p *preferenceEvent) ([]FormattedEvent, error) {
 	fe := FormattedEvent{}
 
 	switch t := p.MessageType; t {
-	case "UserPreferenceUpdated":
+	case "UserPreferenceUpdated", "UserPreferenceCreated":
 		ctx, err = parsePreference([]byte(p.Body))
 	default:
 		return nil, nil
