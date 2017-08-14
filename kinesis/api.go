@@ -35,15 +35,19 @@ func PutListen(msgs <-chan queue.Message, c config.Config) error {
 		fe := make([]hooks.FormattedEvent, 0)
 		if err := json.Unmarshal(m.Body, &fe); err != nil {
 			log.Printf("Couldn't unmarshal body to put to Kinesis: %v", err)
-			return err
+			continue
 		}
 
 		for _, e := range fe {
+			// Anonymous user - don't partition on uuid kinesis stream
+			if e.User.UUID == "" {
+				continue
+			}
 			wg.Add(1)
 			body, err := json.Marshal(e)
 			if err != nil {
 				log.Printf("Couldn't marshal body to put to Kinesis: %v", err)
-				return err
+				continue
 			}
 
 			go func(d []byte, pk string) {
@@ -72,7 +76,6 @@ func PutListen(msgs <-chan queue.Message, c config.Config) error {
 		case err := <-errChan:
 			if err != nil {
 				log.Printf("Couldn't put record to kinesis: %v", err)
-				return err
 			}
 		}
 	}
