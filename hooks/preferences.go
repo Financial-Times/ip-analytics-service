@@ -147,6 +147,7 @@ type preference struct {
 	SuppressedAccount        bool     `json:"suppressedAccount"`
 	Expired                  bool     `json:"expired"`
 	Lists                    []string `json:"lists"`
+	ModifiedPaths            []string `json:"modifiedPaths"`
 	MessageType              string   `json:"messageType"`
 	MessageID                string   `json:"messageId"`
 	Timestamp                string   `json:"timestamp"`
