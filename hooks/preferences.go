@@ -117,7 +117,6 @@ func formatPreferenceEvent(p *preferenceEvent) ([]FormattedEvent, error) {
 	}
 	// Assign UUID to user and remove from context
 	u.UUID = ctx.UUID
-	ctx.UUID = ""
 	ctx.MessageType = p.MessageType
 	ctx.Timestamp = p.MessageTimestamp
 	ctx.MessageID = p.MessageID
