@@ -149,7 +149,7 @@ func parseSubscription(me *membershipEvent, u *user) (*Subscription, error) {
 	}
 	sub := s.Subscription
 	sub.MessageType = me.MessageType
-	sub.Timestamp = me.MessageTimestamp
+	sub.Timestamp = formatTimestamp(me.MessageTimestamp)
 	sub.MessageID = me.MessageID
 	u.UUID = sub.UUID
 	return &sub, nil
@@ -163,7 +163,7 @@ func parseUserUpdate(me *membershipEvent, u *user) (*Update, error) {
 	}
 	upd := up.Update
 	upd.MessageType = me.MessageType
-	upd.Timestamp = me.MessageTimestamp
+	upd.Timestamp = formatTimestamp(me.MessageTimestamp)
 	upd.MessageID = me.MessageID
 	u.UUID = upd.UUID
 	return &upd, nil
