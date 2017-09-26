@@ -166,6 +166,12 @@ func parseUserUpdate(me *membershipEvent, u *user) (*Update, error) {
 	upd.Timestamp = formatTimestamp(me.MessageTimestamp)
 	upd.MessageID = me.MessageID
 	u.UUID = upd.UUID
+
+	// checking if properly synced with membership
+	if u.UUID == "" {
+		log.Println("missing uuid")
+	}
+
 	return &upd, nil
 }
 
