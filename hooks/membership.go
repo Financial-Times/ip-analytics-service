@@ -150,7 +150,7 @@ func parseProductChange(me *membershipEvent, u *user) (*Subscription, error) {
 	if err != nil {
 		return nil, err
 	}
-	sub := &p.Subscription
+	sub := &p.Body.Subscription
 	extendSubscription(sub, me)
 	extendUser(u, sub)
 	return sub, nil
@@ -204,7 +204,9 @@ type defaultChange struct {
 }
 
 type productChange struct {
-	Subscription Subscription `json:"user"`
+	Body struct {
+		Subscription Subscription `json:"user"`
+	} `json:"userProductsChanged"`
 }
 
 // Subscription has necessary information for changes
