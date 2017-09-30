@@ -146,13 +146,6 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 func parseProductChange(me *membershipEvent, u *user) (*Subscription, error) {
 	p := &productChange{}
 	err := json.Unmarshal([]byte(me.Body), p)
-	if err != nil {
-		return nil, err
-	}
-	sub := &p.Subscription
-	extendSubscription(sub, me)
-	extendUser(u, sub)
-	return sub, nil
 }
 
 func parseSubscription(me *membershipEvent, u *user) (*Subscription, error) {
@@ -161,20 +154,12 @@ func parseSubscription(me *membershipEvent, u *user) (*Subscription, error) {
 	if err != nil {
 		return nil, err
 	}
-	sub := &s.Subscription
-	extendSubscription(sub, me)
-	extendUser(u, sub)
-	return sub, nil
-}
-
-func extendSubscription(s *Subscription, m *membershipEvent) {
-	s.MessageType = m.MessageType
-	s.Timestamp = formatTimestamp(m.MessageTimestamp)
-	s.MessageID = m.MessageID
-}
-
-func extendUser(u *user, s *Subscription) {
-	u.UUID = s.UUID
+	sub := s.Subscription
+	sub.MessageType = me.MessageType
+	sub.Timestamp = formatTimestamp(me.MessageTimestamp)
+	sub.MessageID = me.MessageID
+	u.UUID = sub.UUID
+	return &sub, nil
 }
 
 func parseUserUpdate(me *membershipEvent, u *user) (*Update, error) {
@@ -201,8 +186,9 @@ type defaultChange struct {
 	Timestamp   string `json:"timestamp"`
 }
 
-type productChange struct {
-	Subscription Subscription `json:"user"`
+// ProductChange has information on new product for user
+type ProductChange struct {
+	ProductChange Subscription `json:"user"`
 }
 
 // Subscription has necessary information for changes
