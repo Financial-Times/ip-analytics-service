@@ -123,8 +123,9 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 		switch t := v.MessageType; t {
 		case "SubscriptionPurchased", "SubscriptionCancelRequestProcessed":
 			ctx, err = parseSubscription(&v, &u)
-		case "ProductChanged":
+		case "UserProductsChanged":
 			ctx, err = parseProductChange(&v, &u)
+			log.Printf("%v+", ctx)
 		case "UserCreated":
 			ctx, err = parseUserUpdate(&v, &u)
 		default:
@@ -188,6 +189,7 @@ func parseUserUpdate(me *membershipEvent, u *user) (*Update, error) {
 	upd.Timestamp = formatTimestamp(me.MessageTimestamp)
 	upd.MessageID = me.MessageID
 	u.UUID = upd.UUID
+
 	return &upd, nil
 }
 

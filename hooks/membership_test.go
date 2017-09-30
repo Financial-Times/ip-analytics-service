@@ -18,6 +18,7 @@ var validReqTests = []struct {
 	{`{"Messages": [{"MessageType": "SubscriptionPurchased", "Body": "{\"uuid\": \"test\"}"}]}`, http.StatusOK},
 	{`{"Messages": [{"MessageType": "SubscriptionCancelRequestProcessed", "Body": "{\"uuid\": \"test\"}"}]}`, http.StatusOK},
 	{`{"Messages": [{"MessageType": "UserCreated", "Body": "{\"uuid\": \"test\"}"}]}`, http.StatusOK},
+	{`{"Messages": [{"MessageType": "UserProductsChanged", "Body": "{\"uuid\": \"test\"}"}]}`, http.StatusOK},
 }
 
 var pubQueue chan queue.Message
