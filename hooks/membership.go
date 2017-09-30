@@ -125,7 +125,6 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 			ctx, err = parseSubscription(&v, &u)
 		case "UserProductsChanged":
 			ctx, err = parseProductChange(&v, &u)
-			log.Printf("%+v", ctx)
 		case "UserCreated":
 			ctx, err = parseUserUpdate(&v, &u)
 		default:
