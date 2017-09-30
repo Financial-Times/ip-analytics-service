@@ -123,6 +123,9 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 		switch t := v.MessageType; t {
 		case "SubscriptionPurchased", "SubscriptionCancelRequestProcessed":
 			ctx, err = parseSubscription(&v, &u)
+		case "UserProductsChanged":
+			ctx, err = parseProductChange(&v, &u)
+			log.Printf("%v+", ctx)
 		case "UserCreated":
 			ctx, err = parseUserUpdate(&v, &u)
 		default:
@@ -141,18 +144,38 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 }
 
 // TODO refactor functions - remove duplication
+func parseProductChange(me *membershipEvent, u *user) (*Subscription, error) {
+	p := &productChange{}
+	err := json.Unmarshal([]byte(me.Body), p)
+	if err != nil {
+		return nil, err
+	}
+	sub := &p.Subscription
+	extendSubscription(sub, me)
+	extendUser(u, sub)
+	return sub, nil
+}
+
 func parseSubscription(me *membershipEvent, u *user) (*Subscription, error) {
 	s := &subscriptionChange{}
 	err := json.Unmarshal([]byte(me.Body), s)
 	if err != nil {
 		return nil, err
 	}
-	sub := s.Subscription
-	sub.MessageType = me.MessageType
-	sub.Timestamp = formatTimestamp(me.MessageTimestamp)
-	sub.MessageID = me.MessageID
-	u.UUID = sub.UUID
-	return &sub, nil
+	sub := &s.Subscription
+	extendSubscription(sub, me)
+	extendUser(u, sub)
+	return sub, nil
+}
+
+func extendSubscription(s *Subscription, m *membershipEvent) {
+	s.MessageType = m.MessageType
+	s.Timestamp = formatTimestamp(m.MessageTimestamp)
+	s.MessageID = m.MessageID
+}
+
+func extendUser(u *user, s *Subscription) {
+	u.UUID = s.UUID
 }
 
 func parseUserUpdate(me *membershipEvent, u *user) (*Update, error) {
@@ -167,11 +190,6 @@ func parseUserUpdate(me *membershipEvent, u *user) (*Update, error) {
 	upd.MessageID = me.MessageID
 	u.UUID = upd.UUID
 
-	// checking if properly synced with membership
-	if u.UUID == "" {
-		log.Println("missing uuid")
-	}
-
 	return &upd, nil
 }
 
@@ -185,12 +203,19 @@ type defaultChange struct {
 	Timestamp   string `json:"timestamp"`
 }
 
+type productChange struct {
+	Subscription Subscription `json:"user"`
+}
+
 // Subscription has necessary information for changes
 type Subscription struct {
 	UUID            string `json:"userId,omitempty"`
 	PaymentMethodID string `json:"paymentType,omitempty"`
 	OfferID         string `json:"offerId,omitempty"`
-	Product         struct {
+	Products        []struct {
+		ProductCode string `json:"productCode,omitempty"`
+	} `json:"products,omitempty"`
+	Product struct {
 		ID   string `json:"id,omitempty"`
 		Name string `json:"name,omitempty"`
 	} `json:"product,omitempty"`

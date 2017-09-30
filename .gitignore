@@ -15,5 +15,7 @@ vendor/*/
 .glide/
 
 # Sensitive Info
+*dev.yaml*
 .local*
+_local*
 .env*
