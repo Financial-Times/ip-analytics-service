@@ -214,24 +214,23 @@ type productChange struct {
 
 // Subscription has necessary information for changes
 type Subscription struct {
-	UUID            string `json:"userId,omitempty"`
-	PaymentMethodID string `json:"paymentType,omitempty"`
-	OfferID         string `json:"offerId,omitempty"`
-	Products        []struct {
-		ProductCode string `json:"productCode,omitempty"`
-	} `json:"products,omitempty"`
-	Product *struct {
-		ID   string `json:"id,omitempty"`
-		Name string `json:"name,omitempty"`
-	} `json:"product,omitempty"`
-	SegmentID          string `json:"segmentId,omitempty"`
-	ProductRatePlanID  string `json:"productRatePlanId,omitempty"`
-	SubscriptionID     string `json:"subscriptionId,omitempty"`
-	SubscriptionNumber string `json:"subscriptionNumber,omitempty"`
-	InvoiceID          string `json:"invoiceId,omitempty"`
-	InvoiceNumber      string `json:"invoiceNumber,omitempty"`
-	CancellationReason string `json:"cancellationReason,omitempty"`
+	UUID               string     `json:"userId,omitempty"`
+	PaymentMethodID    string     `json:"paymentType,omitempty"`
+	OfferID            string     `json:"offerId,omitempty"`
+	Products           *[]Product `json:"products,omitempty"`
+	SegmentID          string     `json:"segmentId,omitempty"`
+	ProductRatePlanID  string     `json:"productRatePlanId,omitempty"`
+	SubscriptionID     string     `json:"subscriptionId,omitempty"`
+	SubscriptionNumber string     `json:"subscriptionNumber,omitempty"`
+	InvoiceID          string     `json:"invoiceId,omitempty"`
+	InvoiceNumber      string     `json:"invoiceNumber,omitempty"`
+	CancellationReason string     `json:"cancellationReason,omitempty"`
 	defaultChange
+}
+
+// Product has a users subscriptions
+type Product struct {
+	ProductCode string `json:"productCode,omitempty"`
 }
 
 // UserUpdate represents a new or updated user
