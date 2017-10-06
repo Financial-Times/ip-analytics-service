@@ -217,10 +217,10 @@ type Subscription struct {
 	UUID            string `json:"userId,omitempty"`
 	PaymentMethodID string `json:"paymentType,omitempty"`
 	OfferID         string `json:"offerId,omitempty"`
-	Products        *[]struct {
+	Products        []struct {
 		ProductCode string `json:"productCode,omitempty"`
 	} `json:"products,omitempty"`
-	Product struct {
+	Product *struct {
 		ID   string `json:"id,omitempty"`
 		Name string `json:"name,omitempty"`
 	} `json:"product,omitempty"`
