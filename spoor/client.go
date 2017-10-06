@@ -26,7 +26,7 @@ func NewClient(host string) *Client {
 		"Content-Type": "application/json",
 		"spoor-region": "EU", //Randomly assign a different region
 		"User-Agent":   "ip-events-service/v1.1",
-		"spoor-test":   "true",
+		//"spoor-test":   "true",
 	}
 	c := newsapi.NewClient(headers, h)
 	return &Client{host, c}
