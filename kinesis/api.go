@@ -52,7 +52,7 @@ func PutListen(msgs <-chan queue.Message, c config.Config) error {
 
 			go func(d []byte, pk string) {
 				defer wg.Done()
-				res, err := kc.PutRecord(&kinesis.PutRecordInput{
+				_, err := kc.PutRecord(&kinesis.PutRecordInput{
 					Data:         d,
 					StreamName:   streamName,
 					PartitionKey: aws.String(pk),
@@ -60,7 +60,7 @@ func PutListen(msgs <-chan queue.Message, c config.Config) error {
 				if err != nil {
 					errChan <- err
 				} else {
-					log.Printf("%v\n", res)
+					log.Println("Sent to Kinesis")
 				}
 			}(body, e.User.UUID)
 		}

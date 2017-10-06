@@ -15,6 +15,7 @@ type Config struct {
 	AWSAccessKey  string `json:"awsaccesskey"`
 	AWSSecret     string `json:"awssecret"`
 	KinesisStream string `json:"kinesisstream"`
+	SpoorHost     string `json:"spoorhost"`
 }
 
 // NewConfig returns a new Config instance bound with yaml file

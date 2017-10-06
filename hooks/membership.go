@@ -134,9 +134,11 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 			return nil, err
 		}
 
+		// TODO make factory for formatted event
 		fe.System = s
 		fe.Context = ctx
 		fe.User = u
+		fe.Category = "membership"
 		e = append(e, fe)
 	}
 	return e, nil
