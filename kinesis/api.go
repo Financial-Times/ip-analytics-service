@@ -74,6 +74,7 @@ func PutListen(msgs <-chan queue.Message, c config.Config) error {
 		select {
 		case <-doneChan:
 		case err := <-errChan:
+
 			if err != nil {
 				log.Printf("Couldn't put record to kinesis: %v", err)
 			}

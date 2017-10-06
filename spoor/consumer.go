@@ -15,6 +15,7 @@ func Consume(msgs chan queue.Message, c *Client) error {
 	for m := range msgs {
 		var wg sync.WaitGroup
 		doneChan := make(chan bool, 1)
+		errChan := make(chan error, 1)
 
 		fe := make([]hooks.FormattedEvent, 0)
 		if err := json.Unmarshal(m.Body, &fe); err != nil {
@@ -36,11 +37,7 @@ func Consume(msgs chan queue.Message, c *Client) error {
 				defer wg.Done()
 				err := c.Send(d)
 				if err != nil {
-					log.Printf("Couldn't send to spoor: %v", err)
-					m.Response <- false
-				} else {
-					log.Println("Sent to Spoor")
-					m.Response <- true
+					errChan <- err
 				}
 			}(body, m)
 		}
@@ -52,6 +49,14 @@ func Consume(msgs chan queue.Message, c *Client) error {
 
 		select {
 		case <-doneChan:
+			log.Println("Sent to Spoor")
+			m.Response <- true
+		case err := <-errChan:
+			if err != nil {
+				log.Printf("Couldn't send to spoor: %v", err)
+				m.Response <- false
+				return
+			}
 		}
 	}
 
