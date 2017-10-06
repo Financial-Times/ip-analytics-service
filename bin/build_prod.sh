@@ -14,5 +14,5 @@ govendor add +external
 
 # Add heroku details for vendor.json
 cat ./vendor/vendor.json | jq --argjson \
-  heroku '{"install": ["./cmd/..."], "goVersion": "go1.9"}' '. + {heroku: $heroku}' > \
+  heroku '{"install": ["./cmd/..."], "goVersion": "go1.9.1"}' '. + {heroku: $heroku}' > \
   vendor_temp.json && mv vendor_temp.json ./vendor/vendor.json
