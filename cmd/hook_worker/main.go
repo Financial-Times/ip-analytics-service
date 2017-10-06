@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"github.com/financial-times/ip-events-service/config"
+	"github.com/financial-times/ip-events-service/kinesis"
 	"github.com/financial-times/ip-events-service/queue"
 	"github.com/financial-times/ip-events-service/spoor"
 )
@@ -17,7 +18,7 @@ var configPath = flag.String("config", "config_dev.yaml", "path to yaml config")
 
 func main() {
 	flag.Parse()
-	c, err := config.NewConfig(*configPath)
+	conf, err := config.NewConfig(*configPath)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -27,13 +28,26 @@ func main() {
 
 	ctx, done := context.WithCancel(context.Background())
 
-	switch c.GOENV {
+	switch conf.GOENV {
 	case "production":
 		msgChan = make(chan queue.Message)
+		spoorChan := make(chan queue.Message)
+		kinesisChan := make(chan queue.Message)
 		go func() {
-			cl := spoor.NewClient(c.SpoorHost)
-			spoor.Consume(msgChan, cl)
+			cl := spoor.NewClient(conf.SpoorHost)
+			spoor.Consume(spoorChan, cl)
 			done()
+		}()
+		go func() {
+			kinesis.PutListen(kinesisChan, conf)
+			done()
+		}()
+		go func() {
+			for {
+				msg := <-msgChan
+				kinesisChan <- msg
+				spoorChan <- msg
+			}
 		}()
 	case "staging":
 		writer = ioutil.Discard
@@ -43,7 +57,7 @@ func main() {
 	}
 
 	go func() {
-		queue.Consume(queue.Redial(ctx, c.RabbitHost, c.QueueName), msgChan, c.QueueName)
+		queue.Consume(queue.Redial(ctx, conf.RabbitHost, conf.QueueName), msgChan, conf.QueueName)
 		done()
 	}()
 	<-ctx.Done()
