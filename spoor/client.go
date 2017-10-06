@@ -1,6 +1,7 @@
 package spoor
 
 import (
+	"log"
 	"math/rand"
 	"net/http"
 	"time"
@@ -43,6 +44,7 @@ func (c *Client) Send(body []byte) error {
 
 	res := make(map[string]interface{})
 
+	log.Println(string(body))
 	_, err := c.Client.PostURL(c.Host, body, &res, headers)
 	if err != nil {
 		return err
