@@ -1,7 +1,6 @@
 package spoor
 
 import (
-	"log"
 	"math/rand"
 	"net/http"
 	"time"
@@ -20,7 +19,10 @@ type Client struct {
 
 // NewClient is a factory for new Clients
 func NewClient(host string) *Client {
-	h := &http.Client{}
+	timeout := time.Duration(5 * time.Second)
+	h := &http.Client{
+		Timeout: timeout,
+	}
 	headers := map[string]string{
 		"Accept":       "application/json",
 		"Content-Type": "application/json",
@@ -43,9 +45,7 @@ func (c *Client) Send(body []byte) error {
 
 	_, err := c.Client.PostURL(c.Host, body, &res, headers)
 	if err != nil {
-		log.Println(err)
 		return err
 	}
-	log.Println("Sent to Spoor")
 	return nil
 }
