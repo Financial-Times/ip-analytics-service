@@ -123,6 +123,7 @@ func formatPreferenceEvent(p *preferenceEvent) ([]FormattedEvent, error) {
 	fe.System = s
 	fe.Context = ctx
 	fe.User = u
+	fe.Category = "user-preference"
 	e = append(e, fe)
 
 	return e, nil

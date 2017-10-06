@@ -20,9 +20,14 @@ func Consume(sessions chan chan Session, msgs chan<- Message, queueName string) 
 		log.Printf("Consuming...")
 
 		for msg := range deliveries {
-			msgs <- Message{Body: msg.Body}
-			// TODO send response chan and wait for confirmation before ack'in or nack'in
-			sub.Ack(msg.DeliveryTag, false)
+			confirm := make(chan bool, 1)
+			msgs <- Message{Body: msg.Body, Response: confirm}
+			ok := <-confirm
+			if ok {
+				sub.Ack(msg.DeliveryTag, false)
+			} else {
+				sub.Nack(msg.DeliveryTag, false, true)
+			}
 		}
 	}
 }
@@ -31,8 +36,9 @@ func Consume(sessions chan chan Session, msgs chan<- Message, queueName string) 
 func Write(w io.Writer) chan Message {
 	msgs := make(chan Message)
 	go func() {
-		for msg := range msgs {
-			fmt.Fprintln(w, string(msg.Body))
+		for m := range msgs {
+			fmt.Fprintln(w, string(m.Body))
+			m.Response <- true
 		}
 	}()
 	return msgs

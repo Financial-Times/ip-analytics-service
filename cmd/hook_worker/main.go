@@ -9,8 +9,8 @@ import (
 	"os"
 
 	"github.com/financial-times/ip-events-service/config"
-	"github.com/financial-times/ip-events-service/kinesis"
 	"github.com/financial-times/ip-events-service/queue"
+	"github.com/financial-times/ip-events-service/spoor"
 )
 
 var configPath = flag.String("config", "config_dev.yaml", "path to yaml config")
@@ -31,7 +31,8 @@ func main() {
 	case "production":
 		msgChan = make(chan queue.Message)
 		go func() {
-			kinesis.PutListen(msgChan, c)
+			cl := spoor.NewClient(c.SpoorHost)
+			spoor.Consume(msgChan, cl)
 			done()
 		}()
 	case "staging":

@@ -6,4 +6,5 @@ goenv: ${GO_ENV}
 awsregion: ${AWS_REGION}
 awsaccesskey: ${AWS_ACCESS_KEY_ID}
 awssecret: ${AWS_SECRET_ACCESS_KEY}
+spoorhost: https://spoor-api.ft.com/ingest
 kinesisstream: 'spoor-egest-uuid'

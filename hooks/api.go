@@ -58,9 +58,10 @@ func successHandler(w http.ResponseWriter, r *http.Request) {
 
 // FormattedEvent published to queue for consumption
 type FormattedEvent struct {
-	User    user        `json:"user"`
-	Context interface{} `json:"context"`
-	System  system      `json:"system"`
+	User     user        `json:"user"`
+	Context  interface{} `json:"context"`
+	Category string      `json:"category"`
+	System   system      `json:"system"`
 }
 
 type user struct {
