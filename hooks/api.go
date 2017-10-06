@@ -65,7 +65,8 @@ type FormattedEvent struct {
 }
 
 type user struct {
-	UUID string `json:"ft_guid"`
+	UUID           string `json:"ft_guid"`
+	EnrichmentUUID string `json:"uuid"`
 }
 
 type system struct {

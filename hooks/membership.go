@@ -177,6 +177,7 @@ func extendSubscription(s *Subscription, m *membershipEvent) {
 
 func extendUser(u *user, s *Subscription) {
 	u.UUID = s.UUID
+	u.EnrichmentUUID = s.UUID
 }
 
 func parseUserUpdate(me *membershipEvent, u *user) (*Update, error) {
