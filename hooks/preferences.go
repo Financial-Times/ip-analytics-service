@@ -100,7 +100,7 @@ func parsePreferenceEvent(body io.ReadCloser) (*preferenceEvent, error) {
 
 func formatPreferenceEvent(p *preferenceEvent) ([]FormattedEvent, error) {
 	e := make([]FormattedEvent, 0)
-	s := system{"internal-products"}
+	s := system{Source: "internal-products"}
 	var err error
 	var ctx *preference
 	u := user{}

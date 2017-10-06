@@ -110,7 +110,7 @@ func parseEvents(body io.ReadCloser) (*membershipEvents, error) {
 
 func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 	e := make([]FormattedEvent, 0)
-	s := system{"internal-products"}
+	s := system{Source: "internal-products"}
 	for _, v := range me {
 		if v.Body == "" {
 			return nil, errors.New("Bad Request - Body Required")

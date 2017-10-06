@@ -1,6 +1,7 @@
 package spoor
 
 import (
+	"log"
 	"math/rand"
 	"net/http"
 	"time"
@@ -40,6 +41,7 @@ func (c *Client) Send(body []byte) error {
 	headers := map[string]string{
 		"spoor-region": regions[rand.Intn(len(regions))],
 	}
+	log.Println(string(body))
 
 	res := make(map[string]interface{})
 
