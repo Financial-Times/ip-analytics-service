@@ -39,6 +39,7 @@ func Consume(msgs chan queue.Message, c *Client) error {
 					log.Printf("Couldn't send to spoor: %v", err)
 					m.Response <- false
 				} else {
+					log.Println("Sent to Spoor")
 					m.Response <- true
 				}
 			}(body, m)
