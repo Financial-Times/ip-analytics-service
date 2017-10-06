@@ -61,6 +61,7 @@ type FormattedEvent struct {
 	User     user        `json:"user"`
 	Context  interface{} `json:"context"`
 	Category string      `json:"category"`
+	Action   string      `json:"action"`
 	System   system      `json:"system"`
 }
 

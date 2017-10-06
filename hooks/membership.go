@@ -139,6 +139,7 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 		fe.Context = ctx
 		fe.User = u
 		fe.Category = "membership"
+		fe.Action = "change"
 		e = append(e, fe)
 	}
 	return e, nil
