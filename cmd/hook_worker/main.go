@@ -9,7 +9,6 @@ import (
 	"os"
 
 	"github.com/financial-times/ip-events-service/config"
-	"github.com/financial-times/ip-events-service/kinesis"
 	"github.com/financial-times/ip-events-service/queue"
 	"github.com/financial-times/ip-events-service/spoor"
 )
@@ -32,20 +31,14 @@ func main() {
 	case "production":
 		msgChan = make(chan queue.Message)
 		spoorChan := make(chan queue.Message)
-		kinesisChan := make(chan queue.Message)
 		go func() {
 			cl := spoor.NewClient(conf.SpoorHost)
 			spoor.Consume(spoorChan, cl)
 			done()
 		}()
 		go func() {
-			kinesis.PutListen(kinesisChan, conf)
-			done()
-		}()
-		go func() {
 			for {
 				msg := <-msgChan
-				kinesisChan <- msg
 				spoorChan <- msg
 			}
 		}()
