@@ -154,7 +154,7 @@ func parseProductChange(me *membershipEvent, u *user) (*Subscription, error) {
 	}
 	sub := &p.Body.Subscription
 	extendSubscription(sub, me)
-	extendUser(u, sub)
+	extendUser(u, sub.UUID)
 	return sub, nil
 }
 
@@ -166,7 +166,7 @@ func parseSubscription(me *membershipEvent, u *user) (*Subscription, error) {
 	}
 	sub := &s.Subscription
 	extendSubscription(sub, me)
-	extendUser(u, sub)
+	extendUser(u, sub.UUID)
 	return sub, nil
 }
 
@@ -174,11 +174,6 @@ func extendSubscription(s *Subscription, m *membershipEvent) {
 	s.MessageType = m.MessageType
 	s.Timestamp = formatTimestamp(m.MessageTimestamp)
 	s.MessageID = m.MessageID
-}
-
-func extendUser(u *user, s *Subscription) {
-	u.UUID = s.UUID
-	u.EnrichmentUUID = s.UUID
 }
 
 func parseUserUpdate(me *membershipEvent, u *user) (*Update, error) {
@@ -191,9 +186,14 @@ func parseUserUpdate(me *membershipEvent, u *user) (*Update, error) {
 	upd.MessageType = me.MessageType
 	upd.Timestamp = formatTimestamp(me.MessageTimestamp)
 	upd.MessageID = me.MessageID
-	u.UUID = upd.UUID
+	extendUser(u, upd.UUID)
 
 	return &upd, nil
+}
+
+func extendUser(u *user, uuid string) {
+	u.UUID = uuid
+	u.EnrichmentUUID = uuid
 }
 
 type subscriptionChange struct {
