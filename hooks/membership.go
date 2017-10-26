@@ -128,6 +128,7 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 		case "UserCreated":
 			ctx, err = parseUserUpdate(&v, &u)
 		default:
+			log.Printf("%+v", v)
 			continue
 		}
 		if err != nil {
