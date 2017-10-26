@@ -129,6 +129,7 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 			ctx, err = parseUserUpdate(&v, &u)
 		case "SubscriptionPaymentFailure", "SubscriptionPaymentSuccess":
 			log.Printf("%+v", v)
+			ctx, err = parsePayment(&v, &u)
 		default:
 			continue
 		}
@@ -193,6 +194,20 @@ func parseUserUpdate(me *membershipEvent, u *user) (*Update, error) {
 	return &upd, nil
 }
 
+func parsePayment(me *membershipEvent, u *user) (*Payment, error) {
+	p := &Payment{}
+	err := json.Unmarshal([]byte(me.Body), p)
+	if err != nil {
+		return nil, err
+	}
+	p.MessageType = me.MessageType
+	p.Timestamp = formatTimestamp(me.MessageTimestamp)
+	p.MessageID = me.MessageID
+	u.UUID = p.Account.UUID
+
+	return p, nil
+}
+
 func extendUser(u *user, uuid string) {
 	u.UUID = uuid
 	u.EnrichmentUUID = uuid
@@ -227,6 +242,19 @@ type Subscription struct {
 	InvoiceID          string     `json:"invoiceId,omitempty"`
 	InvoiceNumber      string     `json:"invoiceNumber,omitempty"`
 	CancellationReason string     `json:"cancellationReason,omitempty"`
+	defaultChange
+}
+
+// Payment has payment details for failure/success
+type Payment struct {
+	Account struct {
+		UUID string `json:"id"`
+		Name string `json:"name"`
+	} `json:"account"`
+	Payment struct {
+		ID   string `json:"id"`
+		Type string `json:"type"`
+	}
 	defaultChange
 }
 
