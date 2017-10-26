@@ -127,8 +127,9 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 			ctx, err = parseProductChange(&v, &u)
 		case "UserCreated":
 			ctx, err = parseUserUpdate(&v, &u)
-		default:
+		case "SubscriptionPaymentFailure", "SubscriptionPaymentSuccess":
 			log.Printf("%+v", v)
+		default:
 			continue
 		}
 		if err != nil {
