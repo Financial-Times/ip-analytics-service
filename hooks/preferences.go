@@ -49,30 +49,7 @@ func (m *PreferenceHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *
 		return &AppError{err, "Bad Request", http.StatusBadRequest}
 	}
 
-	if fe == nil {
-		successHandler(w, r)
-		return nil
-	}
-
-	b, err := json.Marshal(fe)
-	if err != nil {
-		return &AppError{err, "Bad Request", http.StatusBadRequest}
-	}
-
-	confirm := make(chan bool, 1) // Create a confirm channel to wait for confirmation from publisher
-	msg := queue.Message{
-		Body:     b,
-		Response: confirm,
-	}
-	m.Publish <- msg
-
-	ok := <-confirm
-	if !ok {
-		return &AppError{errors.New("Internal Server Error"), "Internal Server Error", http.StatusInternalServerError}
-	}
-
-	successHandler(w, r)
-	return nil
+	return handleResponse(w, r, fe, m.Publish)
 }
 
 // TODO refactor all parse events to use one function and then case/type
@@ -85,6 +62,9 @@ func parsePreferenceEvent(body io.ReadCloser) (*baseEvent, error) {
 	err = json.Unmarshal(b, p)
 	if err != nil {
 		return nil, err
+	}
+	if (baseEvent{}) == (*p) {
+		return nil, errors.New("No valid message events")
 	}
 
 	return p, nil
