@@ -20,7 +20,7 @@ type MembershipHandler struct {
 // HandlePOST publishes received body to queue in correct format
 func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *AppError {
 	if r.Method != "POST" {
-		return &AppError{errors.New("Not Found"), "Not Found", http.StatusNotFound}
+		return &AppError{errors.New("Method Not Allowed"), "Method Not Allowed", http.StatusMethodNotAllowed}
 	}
 
 	var reader io.ReadCloser
@@ -49,30 +49,7 @@ func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *
 		return &AppError{err, "Bad Request", http.StatusBadRequest}
 	}
 
-	if len(fe) == 0 {
-		successHandler(w, r)
-		return nil
-	}
-
-	b, err := json.Marshal(fe)
-	if err != nil {
-		return &AppError{err, "Bad Request", http.StatusBadRequest}
-	}
-
-	confirm := make(chan bool, 1) // Create a confirm channel to wait for confirmation from publisher
-	msg := queue.Message{
-		Body:     b,
-		Response: confirm,
-	}
-	m.Publish <- msg
-
-	ok := <-confirm
-	if !ok {
-		return &AppError{errors.New("Internal Server Error"), "Internal Server Error", http.StatusInternalServerError}
-	}
-
-	successHandler(w, r)
-	return nil
+	return handleResponse(w, r, fe, m.Publish)
 }
 
 type membershipEvents struct {
@@ -208,19 +185,8 @@ func parsePayment(me *membershipEvent, u *user) (*Payment, error) {
 	return p, nil
 }
 
-func extendUser(u *user, uuid string) {
-	u.UUID = uuid
-	u.EnrichmentUUID = uuid
-}
-
 type subscriptionChange struct {
 	Subscription Subscription `json:"subscription"`
-}
-
-type defaultChange struct {
-	MessageType string `json:"messageType"`
-	MessageID   string `json:"messageId"`
-	Timestamp   string `json:"timestamp"`
 }
 
 type productChange struct {

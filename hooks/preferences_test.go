@@ -117,7 +117,7 @@ func TestHandlePublishPreferenceEvent(t *testing.T) {
 
 func TestParsePreferenceEvent(t *testing.T) {
 	msg := `{"UUID": "123"}`
-	b := &preferenceEvent{Body: msg}
+	b := &baseEvent{Body: msg}
 	bStr, err := json.Marshal(b)
 	if err != nil {
 		t.Errorf("JSON Marshal failed with error %v", err.Error())
@@ -133,7 +133,7 @@ func TestParsePreferenceEvent(t *testing.T) {
 
 func TestFormatPreference(t *testing.T) {
 	msg := `{"uuid": "123"}`
-	m := &preferenceEvent{MessageType: msgType, Body: msg}
+	m := &baseEvent{MessageType: msgType, Body: msg}
 	f, err := formatPreferenceEvent(m)
 	if err != nil {
 		t.Errorf("Could not format events due to error %v", err)
