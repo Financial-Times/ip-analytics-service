@@ -20,7 +20,7 @@ type MembershipHandler struct {
 // HandlePOST publishes received body to queue in correct format
 func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *AppError {
 	if r.Method != "POST" {
-		return &AppError{errors.New("Not Found"), "Not Found", http.StatusNotFound}
+		return &AppError{errors.New("Method Not Allowed"), "Method Not Allowed", http.StatusMethodNotAllowed}
 	}
 
 	var reader io.ReadCloser
@@ -49,30 +49,7 @@ func (m *MembershipHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *
 		return &AppError{err, "Bad Request", http.StatusBadRequest}
 	}
 
-	if len(fe) == 0 {
-		successHandler(w, r)
-		return nil
-	}
-
-	b, err := json.Marshal(fe)
-	if err != nil {
-		return &AppError{err, "Bad Request", http.StatusBadRequest}
-	}
-
-	confirm := make(chan bool, 1) // Create a confirm channel to wait for confirmation from publisher
-	msg := queue.Message{
-		Body:     b,
-		Response: confirm,
-	}
-	m.Publish <- msg
-
-	ok := <-confirm
-	if !ok {
-		return &AppError{errors.New("Internal Server Error"), "Internal Server Error", http.StatusInternalServerError}
-	}
-
-	successHandler(w, r)
-	return nil
+	return handleResponse(w, r, fe, m.Publish)
 }
 
 type membershipEvents struct {
@@ -129,6 +106,7 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 			ctx, err = parseUserUpdate(&v, &u)
 		case "SubscriptionPaymentFailure", "SubscriptionPaymentSuccess":
 			log.Printf("%+v", v)
+			ctx, err = parsePayment(&v, &u)
 		default:
 			continue
 		}
@@ -193,19 +171,22 @@ func parseUserUpdate(me *membershipEvent, u *user) (*Update, error) {
 	return &upd, nil
 }
 
-func extendUser(u *user, uuid string) {
-	u.UUID = uuid
-	u.EnrichmentUUID = uuid
+func parsePayment(me *membershipEvent, u *user) (*Payment, error) {
+	p := &Payment{}
+	err := json.Unmarshal([]byte(me.Body), p)
+	if err != nil {
+		return nil, err
+	}
+	p.MessageType = me.MessageType
+	p.Timestamp = formatTimestamp(me.MessageTimestamp)
+	p.MessageID = me.MessageID
+	u.UUID = p.Account.UUID
+
+	return p, nil
 }
 
 type subscriptionChange struct {
 	Subscription Subscription `json:"subscription"`
-}
-
-type defaultChange struct {
-	MessageType string `json:"messageType"`
-	MessageID   string `json:"messageId"`
-	Timestamp   string `json:"timestamp"`
 }
 
 type productChange struct {
@@ -227,6 +208,19 @@ type Subscription struct {
 	InvoiceID          string     `json:"invoiceId,omitempty"`
 	InvoiceNumber      string     `json:"invoiceNumber,omitempty"`
 	CancellationReason string     `json:"cancellationReason,omitempty"`
+	defaultChange
+}
+
+// Payment has payment details for failure/success
+type Payment struct {
+	Account struct {
+		UUID string `json:"id"`
+		Name string `json:"name"`
+	} `json:"account"`
+	Payment struct {
+		ID   string `json:"id"`
+		Type string `json:"type"`
+	}
 	defaultChange
 }
 

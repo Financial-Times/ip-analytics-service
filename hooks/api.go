@@ -1,6 +1,7 @@
 package hooks
 
 import (
+	"encoding/json"
 	"errors"
 	"log"
 	"net/http"
@@ -36,6 +37,7 @@ func RegisterHandlers(mux *http.ServeMux, cfg config.Config, publish chan queue.
 	paths := map[string]Handler{
 		prefix + "/membership":       &MembershipHandler{publish},
 		prefix + "/user-preferences": &PreferenceHandler{publish},
+		prefix + "/marketing":        &MarketingHandler{publish},
 	}
 	for p, h := range paths {
 		mux.Handle(p, authMiddleware(h.HandlePOST, cfg.APIKey))
@@ -56,6 +58,38 @@ func successHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("OK"))
 }
 
+func handleResponse(w http.ResponseWriter, r *http.Request, fe []FormattedEvent, pub chan queue.Message) *AppError {
+	if len(fe) == 0 {
+		successHandler(w, r)
+		return nil
+	}
+
+	b, err := json.Marshal(fe)
+	if err != nil {
+		return &AppError{err, "Bad Request", http.StatusBadRequest}
+	}
+
+	confirm := make(chan bool, 1)
+	msg := queue.Message{
+		Body:     b,
+		Response: confirm,
+	}
+	pub <- msg
+
+	ok := <-confirm
+	if !ok {
+		return &AppError{errors.New("Internal Server Error"), "Internal Server Error", http.StatusInternalServerError}
+	}
+
+	successHandler(w, r)
+	return nil
+}
+
+func extendUser(u *user, uuid string) {
+	u.UUID = uuid
+	u.EnrichmentUUID = uuid
+}
+
 // FormattedEvent published to queue for consumption
 type FormattedEvent struct {
 	User     user        `json:"user"`
@@ -65,6 +99,14 @@ type FormattedEvent struct {
 	System   system      `json:"system"`
 }
 
+type baseEvent struct {
+	Body             string `json:"body"`
+	ContentType      string `json:"contentType"`
+	MessageID        string `json:"messageId"`
+	MessageTimestamp string `json:"messageTimestamp"`
+	MessageType      string `json:"messageType"`
+}
+
 type user struct {
 	UUID           string `json:"ft_guid"`
 	EnrichmentUUID string `json:"uuid"`
@@ -72,4 +114,10 @@ type user struct {
 
 type system struct {
 	Source string `json:"source"`
+}
+
+type defaultChange struct {
+	MessageType string `json:"messageType"`
+	MessageID   string `json:"messageId"`
+	Timestamp   string `json:"timestamp"`
 }

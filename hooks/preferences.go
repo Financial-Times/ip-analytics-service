@@ -20,7 +20,7 @@ type PreferenceHandler struct {
 // HandlePOST publishes received body to queue in correct format
 func (m *PreferenceHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *AppError {
 	if r.Method != "POST" {
-		return &AppError{errors.New("Not Found"), "Not Found", http.StatusNotFound}
+		return &AppError{errors.New("Method Not Allowed"), "Method Not Allowed", http.StatusMethodNotAllowed}
 	}
 
 	var reader io.ReadCloser
@@ -75,17 +75,9 @@ func (m *PreferenceHandler) HandlePOST(w http.ResponseWriter, r *http.Request) *
 	return nil
 }
 
-type preferenceEvent struct {
-	Body             string `json:"body"`
-	ContentType      string `json:"contentType"`
-	MessageID        string `json:"messageId"`
-	MessageTimestamp string `json:"messageTimestamp"`
-	MessageType      string `json:"messageType"`
-}
-
 // TODO refactor all parse events to use one function and then case/type
-func parsePreferenceEvent(body io.ReadCloser) (*preferenceEvent, error) {
-	p := &preferenceEvent{}
+func parsePreferenceEvent(body io.ReadCloser) (*baseEvent, error) {
+	p := &baseEvent{}
 	b, err := ioutil.ReadAll(body)
 	if err != nil {
 		return nil, err
@@ -98,7 +90,7 @@ func parsePreferenceEvent(body io.ReadCloser) (*preferenceEvent, error) {
 	return p, nil
 }
 
-func formatPreferenceEvent(p *preferenceEvent) ([]FormattedEvent, error) {
+func formatPreferenceEvent(p *baseEvent) ([]FormattedEvent, error) {
 	e := make([]FormattedEvent, 0)
 	s := system{Source: "internal-products"}
 	var err error
@@ -150,7 +142,5 @@ type preference struct {
 	Expired                  bool     `json:"expired"`
 	Lists                    []string `json:"lists"`
 	ModifiedPaths            []string `json:"modifiedPaths"`
-	MessageType              string   `json:"messageType"`
-	MessageID                string   `json:"messageId"`
-	Timestamp                string   `json:"timestamp"`
+	defaultChange
 }
