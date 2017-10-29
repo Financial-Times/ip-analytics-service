@@ -104,7 +104,7 @@ type EntityProgression struct {
 	EntityType    string `json:"entityType"`
 	TrackID       string `json:"trackId"`
 	TrackRevID    string `json:"trackRevId"`
-	SourceSiloID  string `json:"sourceSiloId"`
+	OriginSiloID  string `json:"originSiloId"`
 	LandingSiloID string `json:"landingSiloId"`
 	RuleSetID     string `json:"ruleSetId"`
 	defaultChange
