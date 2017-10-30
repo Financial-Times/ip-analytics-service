@@ -102,11 +102,11 @@ func formatMarketingEvents(me []baseEvent) ([]FormattedEvent, error) {
 type EntityProgression struct {
 	UUID          string `json:"entityId"`
 	EntityType    string `json:"entityType"`
-	TrackID       string `json:"trackId"`
-	TrackRevID    string `json:"trackRevId"`
-	OriginSiloID  string `json:"originSiloId"`
-	LandingSiloID string `json:"landingSiloId"`
-	RuleSetID     string `json:"ruleSetId"`
+	TrackID       int    `json:"trackId"`
+	TrackRevID    int    `json:"trackRevId"`
+	OriginSiloID  int    `json:"originSiloId"`
+	LandingSiloID int    `json:"landingSiloId"`
+	RuleSetID     int    `json:"ruleSetId"`
 	defaultChange
 }
 
