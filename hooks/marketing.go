@@ -93,6 +93,7 @@ func formatMarketingEvents(me []baseEvent) ([]FormattedEvent, error) {
 		fe.User = u
 		fe.Category = "marketing-automation"
 		fe.Action = "progression"
+		fe.Internal = true
 		e = append(e, fe)
 	}
 	return e, nil

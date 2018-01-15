@@ -8,3 +8,5 @@ awsaccesskey: ${AWS_ACCESS_KEY_ID}
 awssecret: ${AWS_SECRET_ACCESS_KEY}
 spoorhost: https://spoor-api.ft.com/ingest
 kinesisstream: 'spoor-egest-uuid'
+keenwritekey: ${KEEN_WRITE_KEY}
+keenprojectid: ${KEEN_PROJECT_ID}

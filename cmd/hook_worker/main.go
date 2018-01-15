@@ -9,6 +9,8 @@ import (
 	"os"
 
 	"github.com/financial-times/ip-events-service/config"
+	"github.com/financial-times/ip-events-service/consumer"
+	"github.com/financial-times/ip-events-service/keen"
 	"github.com/financial-times/ip-events-service/queue"
 	"github.com/financial-times/ip-events-service/spoor"
 )
@@ -32,8 +34,9 @@ func main() {
 		msgChan = make(chan queue.Message)
 		spoorChan := make(chan queue.Message)
 		go func() {
-			cl := spoor.NewClient(conf.SpoorHost)
-			spoor.Consume(spoorChan, cl)
+			sc := spoor.NewClient(conf.SpoorHost)
+			kc := keen.NewClient(conf.KeenWriteKey, conf.KeenProjectID)
+			consumer.Consume(spoorChan, sc, kc)
 			done()
 		}()
 		go func() {

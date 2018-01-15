@@ -97,6 +97,7 @@ type FormattedEvent struct {
 	Category string      `json:"category"`
 	Action   string      `json:"action"`
 	System   system      `json:"system"`
+	Internal bool        `json:",omitempty"`
 }
 
 type baseEvent struct {
