@@ -35,7 +35,7 @@ func main() {
 		spoorChan := make(chan queue.Message)
 		go func() {
 			sc := spoor.NewClient(conf.SpoorHost)
-			kc := keen.NewClient(conf.KeenWriteKey, conf.KeenProjectID)
+			kc := keen.NewClient(conf.KeenProjectID, conf.KeenWriteKey)
 			consumer.Consume(spoorChan, sc, kc)
 			done()
 		}()
