@@ -185,6 +185,12 @@
       "revisionTime": "2017-09-26T19:10:44Z"
     },
     {
+      "checksumSHA1": "hLFoLS9ORFXp+hjUMtbI7aLkcH8=",
+      "path": "github.com/keen/go-keen",
+      "revision": "6f3f03d08d69186043c9e21d0839c2efef8a8620",
+      "revisionTime": "2016-05-17T20:42:45Z"
+    },
+    {
       "checksumSHA1": "F/1vPG037P8WAhCKABrlQ43kfis=",
       "path": "github.com/streadway/amqp",
       "revision": "cefed15a0bd808d13947f228770a81b06ebe8e45",
