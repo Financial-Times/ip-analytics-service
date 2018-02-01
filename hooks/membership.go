@@ -216,6 +216,7 @@ type Subscription struct {
 
 // Payment has payment details for failure/success
 type Payment struct {
+	UUID    string `json:"userId,omitempty"`
 	Account struct {
 		UUID string `json:"id"`
 		Name string `json:"name"`
