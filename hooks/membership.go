@@ -183,7 +183,7 @@ func parsePayment(me *membershipEvent, u *user) (*Payment, error) {
 	p.MessageType = me.MessageType
 	p.Timestamp = formatTimestamp(me.MessageTimestamp)
 	p.MessageID = me.MessageID
-	u.UUID = p.Account.UUID
+	extendUser(u, p.Account.UUID)
 
 	return p, nil
 }
