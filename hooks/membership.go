@@ -99,6 +99,7 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 		fe := FormattedEvent{}
 		switch t := v.MessageType; t {
 		case "SubscriptionPurchased", "SubscriptionCancelRequestProcessed":
+			log.Printf("%+v", v)
 			ctx, err = parseSubscription(&v, &u)
 		case "UserProductsChanged":
 			ctx, err = parseProductChange(&v, &u)
