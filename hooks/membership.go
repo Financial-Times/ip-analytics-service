@@ -121,6 +121,10 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 		fe.User = u
 		fe.Category = "membership"
 		fe.Action = "change"
+
+		log.Printf("%+v", fe.User)
+		log.Printf("%+v", fe.Context)
+
 		e = append(e, fe)
 	}
 	return e, nil
@@ -198,9 +202,10 @@ type productChange struct {
 
 // Subscription has necessary information for changes
 type Subscription struct {
-	UUID               string     `json:"userId,omitempty"`
-	PaymentMethodID    string     `json:"paymentType,omitempty"`
-	OfferID            string     `json:"offerId,omitempty"`
+	UUID            string `json:"userId,omitempty"`
+	PaymentMethodID string `json:"paymentType,omitempty"`
+	OfferID         string `json:"offerId,omitempty"`
+	// CHANGE
 	Products           *[]Product `json:"products,omitempty"`
 	SegmentID          string     `json:"segmentId,omitempty"`
 	ProductRatePlanID  string     `json:"productRatePlanId,omitempty"`
