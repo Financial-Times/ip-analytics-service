@@ -122,6 +122,7 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 		fe.Category = "membership"
 		fe.Action = "change"
 
+		log.Println("Event Info:")
 		log.Printf("%+v", fe.User)
 		log.Printf("%+v", fe.Context)
 
