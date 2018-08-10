@@ -88,8 +88,11 @@ func parseEvents(body io.ReadCloser) (*membershipEvents, error) {
 func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 	e := make([]FormattedEvent, 0)
 	s := system{Source: "internal-products"}
+	log.Printf("%+me", string(me))
 	for _, v := range me {
+		log.Println("IN RANGE")
 		if v.Body == "" {
+			log.Println("NO BODY")
 			return nil, errors.New("Bad Request - Body Required")
 		}
 
