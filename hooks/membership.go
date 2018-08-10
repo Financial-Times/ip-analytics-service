@@ -97,7 +97,7 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 		var ctx interface{}
 		u := user{}
 		fe := FormattedEvent{}
-    log.Printf("%+v", v)
+    log.Printf("EVENT BODY %+v", v)
 		switch t := v.MessageType; t {
 		case "SubscriptionPurchased", "SubscriptionCancelRequestProcessed":
 			log.Printf("%+v", v)
