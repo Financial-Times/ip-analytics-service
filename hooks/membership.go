@@ -97,6 +97,7 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 		var ctx interface{}
 		u := user{}
 		fe := FormattedEvent{}
+    log.Printf("%+v", v)
 		switch t := v.MessageType; t {
 		case "SubscriptionPurchased", "SubscriptionCancelRequestProcessed":
 			log.Printf("%+v", v)
@@ -109,7 +110,7 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 			log.Printf("%+v", v)
 			ctx, err = parsePayment(&v, &u)
 		case "LicenceSeatAllocated":
-			log.Printf("%+v", v)
+      log.Printf("%+v", v)
       fallthrough
 		default:
 			continue
