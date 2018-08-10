@@ -108,6 +108,9 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 		case "SubscriptionPaymentFailure", "SubscriptionPaymentSuccess":
 			log.Printf("%+v", v)
 			ctx, err = parsePayment(&v, &u)
+		case "LicenceSeatAllocated":
+			log.Printf("%+v", v)
+      fallthrough
 		default:
 			continue
 		}
