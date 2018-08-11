@@ -89,9 +89,7 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 	e := make([]FormattedEvent, 0)
 	s := system{Source: "internal-products"}
 	for _, v := range me {
-		log.Println("IN RANGE")
 		if v.Body == "" {
-			log.Println("NO BODY")
 			return nil, errors.New("Bad Request - Body Required")
 		}
 
@@ -99,7 +97,6 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 		var ctx interface{}
 		u := user{}
 		fe := FormattedEvent{}
-		log.Printf("EVENT BODY: %+v", v)
 		switch t := v.MessageType; t {
 		case "SubscriptionPurchased", "SubscriptionCancelRequestProcessed":
 			log.Printf("%+v", v)
@@ -111,6 +108,9 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 		case "SubscriptionPaymentFailure", "SubscriptionPaymentSuccess":
 			log.Printf("%+v", v)
 			ctx, err = parsePayment(&v, &u)
+		case "LicenceSeatAllocated":
+			log.Printf("%+v", v)
+			ctx, err = parseSeatAllocated(&v, &u)
 		default:
 			continue
 		}
@@ -194,6 +194,19 @@ func parsePayment(me *membershipEvent, u *user) (*Payment, error) {
 	return p, nil
 }
 
+func parseSeatAllocated(me *membershipEvent, u *user) (*SeatAllocated, error) {
+	sa := &SeatAllocated{}
+	err := json.Unmarshal([]byte(me.Body), sa)
+	if err != nil {
+		return nil, err
+	}
+	sa.MessageType = me.MessageType
+	sa.Timestamp = formatTimestamp(me.MessageTimestamp)
+	sa.MessageID = me.MessageID
+
+	return sa, nil
+}
+
 type subscriptionChange struct {
 	Subscription Subscription `json:"subscription"`
 }
@@ -218,6 +231,16 @@ type Subscription struct {
 	InvoiceID          string     `json:"invoiceId,omitempty"`
 	InvoiceNumber      string     `json:"invoiceNumber,omitempty"`
 	CancellationReason string     `json:"cancellationReason,omitempty"`
+	defaultChange
+}
+
+type SeatAllocated struct {
+	Body struct {
+    User struct {
+      UUID            string `json:"userId,omitempty"`
+      LicenceID         string `json:"licenceId,omitempty"`
+    }
+	} `json:"licenceSeatAllocated"`
 	defaultChange
 }
 
