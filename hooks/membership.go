@@ -198,6 +198,7 @@ func parseSeatAllocated(me *membershipEvent, u *user) (*SeatAllocated, error) {
 	sa := &SeatAllocated{}
 	err := json.Unmarshal([]byte(me.Body), sa)
 	if err != nil {
+		log.Printf("%+v", fe.User)
 		return nil, err
 	}
 	sa.MessageType = me.MessageType
