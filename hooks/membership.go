@@ -237,11 +237,13 @@ type Subscription struct {
 }
 
 type SeatAllocated struct {
-	Body struct {
-    UUID            string `json:"userId,omitempty"`
-    LicenceID         string `json:"licenceId,omitempty"`
-	} `json:"licenceSeatAllocated"`
+	Seat Seat `json:"licenceSeatAllocated"`
 	defaultChange
+}
+
+type Seat struct {
+  UUID            string `json:"userId,omitempty"`
+  LicenceID         string `json:"licenceId,omitempty"`
 }
 
 // Payment has payment details for failure/success

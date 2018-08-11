@@ -179,38 +179,38 @@
     {
       "checksumSHA1": "TUlqh6mMWQuo3TEABRAP5ZjhhWc=",
       "path": "github.com/financial-times/ip-events-service/config",
-      "revision": "86273016e7f8e1d78eab14ef461133264320d239",
-      "revisionTime": "2018-08-11T16:52:33Z"
+      "revision": "db034a9ef870a82837dff26fa4410999042c405f",
+      "revisionTime": "2018-08-11T17:08:18Z"
     },
     {
       "checksumSHA1": "wfUv1zkdvPvrlC5/LauNwU9OMjc=",
       "path": "github.com/financial-times/ip-events-service/consumer",
-      "revision": "86273016e7f8e1d78eab14ef461133264320d239",
-      "revisionTime": "2018-08-11T16:52:33Z"
+      "revision": "db034a9ef870a82837dff26fa4410999042c405f",
+      "revisionTime": "2018-08-11T17:08:18Z"
     },
     {
-      "checksumSHA1": "DeMb0EZdwWbn881KMeIWqMcbeCM=",
+      "checksumSHA1": "mHFnPDxvinayL70r8kr05iokgvw=",
       "path": "github.com/financial-times/ip-events-service/hooks",
-      "revision": "86273016e7f8e1d78eab14ef461133264320d239",
-      "revisionTime": "2018-08-11T16:52:33Z"
+      "revision": "db034a9ef870a82837dff26fa4410999042c405f",
+      "revisionTime": "2018-08-11T17:08:18Z"
     },
     {
       "checksumSHA1": "A6a+6Wq4Ncj6TE4JPu99hXki0cs=",
       "path": "github.com/financial-times/ip-events-service/keen",
-      "revision": "86273016e7f8e1d78eab14ef461133264320d239",
-      "revisionTime": "2018-08-11T16:52:33Z"
+      "revision": "db034a9ef870a82837dff26fa4410999042c405f",
+      "revisionTime": "2018-08-11T17:08:18Z"
     },
     {
       "checksumSHA1": "bPmtsom8M5mTiK9/qeJUf1fMYxw=",
       "path": "github.com/financial-times/ip-events-service/queue",
-      "revision": "86273016e7f8e1d78eab14ef461133264320d239",
-      "revisionTime": "2018-08-11T16:52:33Z"
+      "revision": "db034a9ef870a82837dff26fa4410999042c405f",
+      "revisionTime": "2018-08-11T17:08:18Z"
     },
     {
       "checksumSHA1": "jBEchzrUBW//jNrMXgf1Ac53N0A=",
       "path": "github.com/financial-times/ip-events-service/spoor",
-      "revision": "86273016e7f8e1d78eab14ef461133264320d239",
-      "revisionTime": "2018-08-11T16:52:33Z"
+      "revision": "db034a9ef870a82837dff26fa4410999042c405f",
+      "revisionTime": "2018-08-11T17:08:18Z"
     },
     {
       "checksumSHA1": "VvZKmbuBN1QAG699KduTdmSPwA4=",
