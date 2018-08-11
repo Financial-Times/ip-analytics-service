@@ -115,6 +115,7 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 			continue
 		}
 		if err != nil {
+      log.Println("Error : something terrible happen -> ", err)
 			return nil, err
 		}
 
@@ -198,7 +199,7 @@ func parseSeatAllocated(me *membershipEvent, u *user) (*SeatAllocated, error) {
 	sa := &SeatAllocated{}
 	err := json.Unmarshal([]byte(me.Body), sa)
 	if err != nil {
-		log.Printf("%+v", fe.User)
+    log.Println("Error : something terrible happen -> ", err)
 		return nil, err
 	}
 	sa.MessageType = me.MessageType
