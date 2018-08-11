@@ -238,10 +238,8 @@ type Subscription struct {
 
 type SeatAllocated struct {
 	Body struct {
-    User struct {
-      UUID            string `json:"userId,omitempty"`
-      LicenceID         string `json:"licenceId,omitempty"`
-    }
+    UUID            string `json:"userId,omitempty"`
+    LicenceID         string `json:"licenceId,omitempty"`
 	} `json:"licenceSeatAllocated"`
 	defaultChange
 }
