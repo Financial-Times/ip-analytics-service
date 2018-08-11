@@ -88,7 +88,6 @@ func parseEvents(body io.ReadCloser) (*membershipEvents, error) {
 func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 	e := make([]FormattedEvent, 0)
 	s := system{Source: "internal-products"}
-	log.Printf("%+me", string(me))
 	for _, v := range me {
 		log.Println("IN RANGE")
 		if v.Body == "" {
@@ -100,8 +99,7 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 		var ctx interface{}
 		u := user{}
 		fe := FormattedEvent{}
-		log.Println("EVENT BODY:")
-		log.Printf("%+v", string(v))
+		log.Printf("EVENT BODY: %+v", v)
 		switch t := v.MessageType; t {
 		case "SubscriptionPurchased", "SubscriptionCancelRequestProcessed":
 			log.Printf("%+v", v)
