@@ -33,6 +33,7 @@ func (fn appHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 // RegisterHandlers registers all paths and handlers to provided mux
 func RegisterHandlers(mux *http.ServeMux, cfg config.Config, publish chan queue.Message) {
+	log.Println("Registering handlers")
 	prefix := "/webhooks"
 	paths := map[string]Handler{
 		prefix + "/membership":       &MembershipHandler{publish},
