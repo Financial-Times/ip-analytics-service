@@ -195,18 +195,20 @@ func parsePayment(me *membershipEvent, u *user) (*Payment, error) {
 	return p, nil
 }
 
-func parseSeatAllocated(me *membershipEvent, u *user) (*SeatAllocated, error) {
+func parseSeatAllocated(me *membershipEvent, u *user) (*Seat, error) {
 	sa := &SeatAllocated{}
 	err := json.Unmarshal([]byte(me.Body), sa)
 	if err != nil {
     log.Println("Error : something terrible happen -> ", err)
 		return nil, err
 	}
-	sa.MessageType = me.MessageType
-	sa.Timestamp = formatTimestamp(me.MessageTimestamp)
-	sa.MessageID = me.MessageID
+  sas := sa.Seat
+	sas.MessageType = me.MessageType
+	sas.Timestamp = formatTimestamp(me.MessageTimestamp)
+	sas.MessageID = me.MessageID
+	extendUser(u, sas.UUID)
 
-	return sa, nil
+	return &sas, nil
 }
 
 type subscriptionChange struct {
@@ -238,12 +240,12 @@ type Subscription struct {
 
 type SeatAllocated struct {
 	Seat Seat `json:"licenceSeatAllocated"`
-	defaultChange
 }
 
 type Seat struct {
   UUID            string `json:"userId,omitempty"`
   LicenceID         string `json:"licenceId,omitempty"`
+	defaultChange
 }
 
 // Payment has payment details for failure/success
