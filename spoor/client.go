@@ -52,7 +52,7 @@ func (c *Client) Send(body hooks.FormattedEvent) error {
 	res := make(map[string]interface{})
 
   fmt.Printf("JSON %s", b)
-
+  fmt.Println("****");
 	_, err = c.Client.PostURL(c.Host, b, &res, headers)
 	if err != nil {
 		return err
