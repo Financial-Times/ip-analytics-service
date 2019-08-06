@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
   "fmt"
+	"log"
 
 	"github.com/financial-times/email-news-api/newsapi"
 	"github.com/financial-times/ip-events-service/hooks"
@@ -51,8 +52,9 @@ func (c *Client) Send(body hooks.FormattedEvent) error {
 	}
 	res := make(map[string]interface{})
 
-  fmt.Printf("JSON %s", b)
-  fmt.Println("****");
+  log.Println("Event JSON:")
+  fmt.Printf("%s", b)
+
 	_, err = c.Client.PostURL(c.Host, b, &res, headers)
 	if err != nil {
 		return err

@@ -179,38 +179,38 @@
     {
       "checksumSHA1": "TUlqh6mMWQuo3TEABRAP5ZjhhWc=",
       "path": "github.com/financial-times/ip-events-service/config",
-      "revision": "f44046a3ae8725b19a360f34600caa8e6023b417",
-      "revisionTime": "2019-08-06T08:29:06Z"
+      "revision": "81ea28c032cc191fe8ab756626eb1d41270ebdfa",
+      "revisionTime": "2019-08-06T11:17:14Z"
     },
     {
       "checksumSHA1": "wfUv1zkdvPvrlC5/LauNwU9OMjc=",
       "path": "github.com/financial-times/ip-events-service/consumer",
-      "revision": "f44046a3ae8725b19a360f34600caa8e6023b417",
-      "revisionTime": "2019-08-06T08:29:06Z"
+      "revision": "81ea28c032cc191fe8ab756626eb1d41270ebdfa",
+      "revisionTime": "2019-08-06T11:17:14Z"
     },
     {
       "checksumSHA1": "jTPRP+XjXCqsScKLfSSsdF3hAu8=",
       "path": "github.com/financial-times/ip-events-service/hooks",
-      "revision": "f44046a3ae8725b19a360f34600caa8e6023b417",
-      "revisionTime": "2019-08-06T08:29:06Z"
+      "revision": "81ea28c032cc191fe8ab756626eb1d41270ebdfa",
+      "revisionTime": "2019-08-06T11:17:14Z"
     },
     {
       "checksumSHA1": "A6a+6Wq4Ncj6TE4JPu99hXki0cs=",
       "path": "github.com/financial-times/ip-events-service/keen",
-      "revision": "f44046a3ae8725b19a360f34600caa8e6023b417",
-      "revisionTime": "2019-08-06T08:29:06Z"
+      "revision": "81ea28c032cc191fe8ab756626eb1d41270ebdfa",
+      "revisionTime": "2019-08-06T11:17:14Z"
     },
     {
       "checksumSHA1": "bPmtsom8M5mTiK9/qeJUf1fMYxw=",
       "path": "github.com/financial-times/ip-events-service/queue",
-      "revision": "f44046a3ae8725b19a360f34600caa8e6023b417",
-      "revisionTime": "2019-08-06T08:29:06Z"
+      "revision": "81ea28c032cc191fe8ab756626eb1d41270ebdfa",
+      "revisionTime": "2019-08-06T11:17:14Z"
     },
     {
-      "checksumSHA1": "flY5McjnHFHDcAisvPSJSjdyf6I=",
+      "checksumSHA1": "gcTsNyS8KaVfMG7HhRMbDu0XPTo=",
       "path": "github.com/financial-times/ip-events-service/spoor",
-      "revision": "f44046a3ae8725b19a360f34600caa8e6023b417",
-      "revisionTime": "2019-08-06T08:29:06Z"
+      "revision": "81ea28c032cc191fe8ab756626eb1d41270ebdfa",
+      "revisionTime": "2019-08-06T11:17:14Z"
     },
     {
       "checksumSHA1": "VvZKmbuBN1QAG699KduTdmSPwA4=",
