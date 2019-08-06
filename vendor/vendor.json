@@ -173,44 +173,44 @@
     {
       "checksumSHA1": "Qr+rtK3Zr/QdLqeWjaXji0/vxME=",
       "path": "github.com/financial-times/email-news-api/newsapi",
-      "revision": "46baa95e3bff33f307094ca71bb471457eb06a46",
-      "revisionTime": "2017-10-12T07:09:29Z"
+      "revision": "6a6e22303c54054b8bd4ae4390071ae4cf98cb62",
+      "revisionTime": "2019-01-28T15:46:22Z"
     },
     {
       "checksumSHA1": "TUlqh6mMWQuo3TEABRAP5ZjhhWc=",
       "path": "github.com/financial-times/ip-events-service/config",
-      "revision": "de4b01fbd31d35713f2d4f96cea89273468e3a3f",
-      "revisionTime": "2019-08-06T08:21:47Z"
+      "revision": "f44046a3ae8725b19a360f34600caa8e6023b417",
+      "revisionTime": "2019-08-06T08:29:06Z"
     },
     {
       "checksumSHA1": "wfUv1zkdvPvrlC5/LauNwU9OMjc=",
       "path": "github.com/financial-times/ip-events-service/consumer",
-      "revision": "de4b01fbd31d35713f2d4f96cea89273468e3a3f",
-      "revisionTime": "2019-08-06T08:21:47Z"
+      "revision": "f44046a3ae8725b19a360f34600caa8e6023b417",
+      "revisionTime": "2019-08-06T08:29:06Z"
     },
     {
       "checksumSHA1": "jTPRP+XjXCqsScKLfSSsdF3hAu8=",
       "path": "github.com/financial-times/ip-events-service/hooks",
-      "revision": "de4b01fbd31d35713f2d4f96cea89273468e3a3f",
-      "revisionTime": "2019-08-06T08:21:47Z"
+      "revision": "f44046a3ae8725b19a360f34600caa8e6023b417",
+      "revisionTime": "2019-08-06T08:29:06Z"
     },
     {
       "checksumSHA1": "A6a+6Wq4Ncj6TE4JPu99hXki0cs=",
       "path": "github.com/financial-times/ip-events-service/keen",
-      "revision": "de4b01fbd31d35713f2d4f96cea89273468e3a3f",
-      "revisionTime": "2019-08-06T08:21:47Z"
+      "revision": "f44046a3ae8725b19a360f34600caa8e6023b417",
+      "revisionTime": "2019-08-06T08:29:06Z"
     },
     {
       "checksumSHA1": "bPmtsom8M5mTiK9/qeJUf1fMYxw=",
       "path": "github.com/financial-times/ip-events-service/queue",
-      "revision": "de4b01fbd31d35713f2d4f96cea89273468e3a3f",
-      "revisionTime": "2019-08-06T08:21:47Z"
+      "revision": "f44046a3ae8725b19a360f34600caa8e6023b417",
+      "revisionTime": "2019-08-06T08:29:06Z"
     },
     {
       "checksumSHA1": "flY5McjnHFHDcAisvPSJSjdyf6I=",
       "path": "github.com/financial-times/ip-events-service/spoor",
-      "revision": "de4b01fbd31d35713f2d4f96cea89273468e3a3f",
-      "revisionTime": "2019-08-06T08:21:47Z"
+      "revision": "f44046a3ae8725b19a360f34600caa8e6023b417",
+      "revisionTime": "2019-08-06T08:29:06Z"
     },
     {
       "checksumSHA1": "VvZKmbuBN1QAG699KduTdmSPwA4=",
