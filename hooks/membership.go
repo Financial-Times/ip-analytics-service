@@ -99,17 +99,24 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 		fe := FormattedEvent{}
 		switch t := v.MessageType; t {
 		case "SubscriptionPurchased", "SubscriptionCancelRequestProcessed":
+			log.Println("UNFORMATTED INCOMING EVENT")
 			log.Printf("%+v", v)
 			ctx, err = parseSubscription(&v, &u)
 		case "UserProductsChanged":
+			log.Println("UNFORMATTED INCOMING EVENT")
+			log.Printf("%+v", v)
 			ctx, err = parseProductChange(&v, &u)
 		case "UserCreated":
+			log.Println("UNFORMATTED INCOMING EVENT")
+			log.Printf("%+v", v)
 			ctx, err = parseUserUpdate(&v, &u)
 		case "SubscriptionPaymentFailure", "SubscriptionPaymentSuccess":
+			log.Println("UNFORMATTED INCOMING EVENT")
 			log.Printf("%+v", v)
 			ctx, err = parsePayment(&v, &u)
 		case "LicenceSeatAllocated", "LicenceSeatDeallocated":
-			log.Printf("%+v", v)
+			log.Println("UNFORMATTED INCOMING EVENT")
+			log.Printf("%+v", v)			
 			ctx, err = parseSeatAllocated(&v, &u)
 		default:
 			continue
@@ -126,11 +133,14 @@ func formatEvents(me []membershipEvent) ([]FormattedEvent, error) {
 		fe.Category = "membership"
 		fe.Action = "change"
 
-		log.Println("Event Info:")
-		log.Printf("%+v", fe.User)
-		log.Printf("%+v", fe.Context)
+		//log.Println("Event Info:")
+		//log.Printf("%+v", fe.User)
+		//log.Printf("%+v", fe.Context)
 
 		e = append(e, fe)
+		
+		log.Println("FORMATTED OUTGOING EVENT")
+		log.Printf("%+v", e)
 	}
 	return e, nil
 }
