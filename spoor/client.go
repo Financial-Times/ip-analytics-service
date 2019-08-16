@@ -52,7 +52,7 @@ func (c *Client) Send(body hooks.FormattedEvent) error {
 	}
 	res := make(map[string]interface{})
 
-  log.Println("Event JSON:")
+  log.Println("Spoor outgoing JSON:")
   fmt.Printf("%s", b)
 
 	_, err = c.Client.PostURL(c.Host, b, &res, headers)
