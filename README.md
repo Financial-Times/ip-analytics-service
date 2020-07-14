@@ -1,10 +1,4 @@
-# ip-analytics-service
-Analytics service for consumption from multiple providers.
+# ip-events-service
 
-# HOWTO
-
-Run bin/build_prod.sh to vendor the dependencies before deploying. Requires jq
-installed on command line.
-
-## TODO 
-- setup test/build pipeline with jq (dep for json injection)
+Built for Envoy, this connected to Membership's kafka http bridge to receive membership events, then send them to spoor api.
+Decommissioned July 2020.
